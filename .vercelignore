@@ -1,3 +1,8 @@
 node_modules
 .DS_Store
 *.log
+
+# Unused, and likely carries an unlicensed stock watermark (see README).
+# Excluded from git for the same reason — keep the two lists in step so the
+# file is never published, by repo or by CDN.
+assets/img/home-about.png
