@@ -7,10 +7,24 @@
 <meta name="description" content="Future Stars Foundation (FSF) is a youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship, leadership development and essential support services." />
 <meta name="theme-color" content="#0b0b0f" />
 
+<!-- Link previews. og:image MUST be an absolute URL — scrapers don't resolve
+     relative paths, and most will silently show nothing. Update the origin here
+     if the site moves to futurestarsfoundation.com. -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="Future Stars Foundation" />
+<meta property="og:url" content="https://futurestarsfoundation.vercel.app/" />
 <meta property="og:title" content="Future Stars Foundation — Empowering Youth for a Brighter Future" />
 <meta property="og:description" content="A youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship and essential support services." />
-<meta property="og:image" content="assets/img/blog2.jpg" />
+<meta property="og:image" content="https://futurestarsfoundation.vercel.app/assets/img/og-card.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Future Stars Foundation — Empowering Youth for a Brighter Future" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Future Stars Foundation — Empowering Youth for a Brighter Future" />
+<meta name="twitter:description" content="A youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship and essential support services." />
+<meta name="twitter:image" content="https://futurestarsfoundation.vercel.app/assets/img/og-card.jpg" />
 
 <link rel="icon" href="assets/img/cropped-favicon2.png" />
 <link rel="apple-touch-icon" href="assets/img/cropped-favicon2.png" />
@@ -101,9 +115,17 @@
     </nav>
   </div>
 
-  <!-- mobile menu -->
-  <div id="mobilemenu" class="pointer-events-none fixed inset-0 z-40 translate-y-[-100%] bg-ink/95 backdrop-blur-2xl transition-transform duration-500 lg:hidden" style="transition-timing-function: var(--ease-out-expo)">
-    <div class="container-x flex h-full flex-col justify-center gap-1 pt-20">
+  <!-- Mobile menu.
+       overflow-y-auto is load-bearing, not a nicety. The panel hides with
+       translate-y-[-100%], which moves it by its OWN height. The inner column
+       used h-full + justify-center, so on a short viewport (a phone with
+       browser chrome, or landscape) the content is taller than the panel and
+       centering pushes it outside the panel's box — the translate then fails to
+       clear it and the gold Donate button peeks above the top edge.
+       overflow-y-auto clips content to the box (and lets a tall menu scroll);
+       min-h-full lets the column grow past the viewport instead of overflowing. -->
+  <div id="mobilemenu" class="pointer-events-none invisible fixed inset-0 z-40 translate-y-[-100%] overflow-y-auto overscroll-contain bg-ink/95 backdrop-blur-2xl transition-[transform,visibility] duration-500 lg:hidden" style="transition-timing-function: var(--ease-out-expo)">
+    <div class="container-x flex min-h-full flex-col justify-center gap-1 py-24">
       <a href="#home"     class="mob-link" data-nav>Home</a>
       <a href="#about"    class="mob-link" data-nav>About Us</a>
       <a href="#programs" class="mob-link" data-nav>Programs</a>

@@ -226,6 +226,7 @@
     mobOpen = open;
     mob.classList.toggle('translate-y-[-100%]', !open);
     mob.classList.toggle('pointer-events-none', !open);
+    mob.classList.toggle('invisible', !open);
     // aria-expanded is the single source of truth — CSS animates the burger into
     // an X off the same attribute, so there is no inline transform to keep in sync.
     burger.setAttribute('aria-expanded', String(open));
