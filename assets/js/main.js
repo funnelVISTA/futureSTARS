@@ -223,22 +223,46 @@
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (fine && !reduced) {
     const dot = $('#cursor-dot'), ring = $('#cursor-ring');
-    let rx = 0, ry = 0, mx = 0, my = 0;
-    document.body.classList.add('cursor-ready');
+    let rx = 0, ry = 0, mx = 0, my = 0, ready = false, raf = 0;
+
+    // Only reveal once a real mouse has actually moved. Revealing up front parks
+    // the ring at translate(0,0) — a gold blob in the top-left corner over the
+    // logo — and on a device that never fires a mouse move it stays there.
+    // pointerType filters out touch, which reports hover:hover on some browsers.
+    const show = (x, y) => {
+      ready = true;
+      rx = mx = x; ry = my = y;              // start at the cursor, don't fly in from 0,0
+      document.body.classList.add('cursor-ready');
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+    const hide = () => {
+      ready = false;
+      document.body.classList.remove('cursor-ready', 'cursor-hot');
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    };
+
+    function loop() {
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      ring.style.transform = `translate3d(${rx - 17}px, ${ry - 17}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    }
+
     window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      if (!ready) show(e.clientX, e.clientY);
       mx = e.clientX; my = e.clientY;
       dot.style.transform = `translate3d(${mx - 3}px, ${my - 3}px, 0)`;
     }, { passive: true });
-    const loop = () => {
-      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-      ring.style.transform = `translate3d(${rx - 17}px, ${ry - 17}px, 0)`;
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-    const hot = () => document.body.classList.add('cursor-hot');
-    const cold = () => document.body.classList.remove('cursor-hot');
+
+    // a touch means there's no mouse in play — retract until one moves again
+    window.addEventListener('touchstart', hide, { passive: true });
+    window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') hide(); }, { passive: true });
+    document.addEventListener('mouseleave', hide);
+
     document.addEventListener('pointerover', (e) => {
-      if (e.target.closest('a, button, [data-cursor="hot"], input, textarea, select')) hot(); else cold();
+      if (!ready) return;
+      const hot = e.target.closest('a, button, [data-cursor="hot"], input, textarea, select');
+      document.body.classList.toggle('cursor-hot', !!hot);
     });
   }
 

@@ -59,6 +59,14 @@
     line-height: 1.02;
   }
 
+  /* Browsers ship `fieldset { min-inline-size: min-content }` in the UA sheet,
+     which stops a fieldset shrinking below its contents. That floor propagates
+     out through ancestors and blows the grid track wider than the viewport —
+     it pushed the donate card ~18px off-screen on a 390px phone. */
+  fieldset {
+    min-inline-size: 0;
+  }
+
   ::selection {
     background: var(--color-gold);
     color: var(--color-ink);

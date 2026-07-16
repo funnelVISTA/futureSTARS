@@ -335,7 +335,7 @@
 <!-- ============================== DONATE ============================== -->
 <section id="donate" class="relative overflow-hidden py-24 md:py-32">
   <div class="container-x">
-    <div class="relative overflow-hidden rounded-[2.5rem] border border-gold/25 bg-gradient-to-br from-gold/14 via-ink-2 to-ink-2 p-8 md:p-16">
+    <div class="relative overflow-hidden rounded-[2.5rem] border border-gold/25 bg-gradient-to-br from-gold/14 via-ink-2 to-ink-2 p-5 sm:p-8 md:p-16">
 
       <!-- decorative stars -->
       <div class="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -343,7 +343,11 @@
         <svg class="absolute right-[22%] bottom-[14%] h-10 w-10 text-coral/25 anim-float" viewBox="0 0 24 24" fill="currentColor" style="animation-delay:-3s"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
       </div>
 
-      <div class="relative grid items-center gap-12 lg:grid-cols-2">
+      <!-- grid-cols-1 is load-bearing: without a grid-cols-* class the implicit
+           track is `auto`, sized to max-content, so the donate card rendered
+           355px wide inside a 308px column and hung off a 390px screen.
+           Tailwind's grid-cols-* expand to minmax(0,1fr), which can shrink. -->
+      <div class="relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         <div>
           <p class="eyebrow mb-6" data-reveal>Donate</p>
           <h2 class="text-[clamp(2rem,4.6vw,3.4rem)]" data-reveal style="--d:80ms">
@@ -363,25 +367,29 @@
           </ul>
         </div>
 
-        <!-- donate card -->
-        <div class="rounded-3xl border border-cream/12 bg-ink/70 p-6 backdrop-blur-xl md:p-8" data-reveal style="--d:200ms">
+        <!-- donate card.
+             The grid buttons override .btn's 1.9rem side padding: at ~390px the
+             three amount columns would otherwise demand ~305px and push the card
+             past the viewport edge (clipped, not scrollable, by overflow-x hidden).
+             min-w-0 lets a grid item shrink below its content's intrinsic width. -->
+        <div class="min-w-0 rounded-3xl border border-cream/12 bg-ink/70 p-5 backdrop-blur-xl md:p-8" data-reveal style="--d:200ms">
           <fieldset>
             <legend class="label !mb-3">Select Donation Type</legend>
             <div class="grid grid-cols-2 gap-2.5" role="group">
-              <button type="button" class="dtype btn btn-gold !py-3 !text-[0.85rem]" data-dtype aria-pressed="true">One-Time</button>
-              <button type="button" class="dtype btn btn-ghost !py-3 !text-[0.85rem]" data-dtype aria-pressed="false">Recurring</button>
+              <button type="button" class="dtype btn btn-gold min-w-0 !px-2 !py-3 !text-[0.85rem]" data-dtype aria-pressed="true">One-Time</button>
+              <button type="button" class="dtype btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.85rem]" data-dtype aria-pressed="false">Recurring</button>
             </div>
           </fieldset>
 
           <fieldset class="mt-6">
             <legend class="label !mb-3">Choose an amount (CAD)</legend>
             <div class="grid grid-cols-3 gap-2.5" role="group">
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="25" aria-pressed="false">$25</button>
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="50" aria-pressed="false">$50</button>
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="100" aria-pressed="false">$100</button>
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="250" aria-pressed="false">$250</button>
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="500" aria-pressed="false">$500</button>
-              <button type="button" class="amt btn btn-ghost !py-3 !text-[0.9rem]" data-amt="custom" aria-pressed="false">Other</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="25" aria-pressed="false">$25</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="50" aria-pressed="false">$50</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="100" aria-pressed="false">$100</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="250" aria-pressed="false">$250</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="500" aria-pressed="false">$500</button>
+              <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="custom" aria-pressed="false">Other</button>
             </div>
           </fieldset>
 
