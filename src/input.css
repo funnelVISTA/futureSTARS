@@ -9,7 +9,21 @@
    Brand colours sampled directly from the FSF logo:
    gold #BF9412 · cream #F9F5E9 · ink #000000
    ============================================================ */
+/* ------------------------------------------------------------------
+   Theming.
+
+   Tailwind compiles every colour utility — including opacity variants like
+   text-cream/70 — down to color-mix(in oklab, var(--color-cream) 70%, …).
+   So redefining these three tokens re-themes the whole site; there is no
+   need for a parallel set of light-mode classes.
+
+   Consequence: `ink` means "page ground" and `cream` means "page text",
+   NOT literally dark and light. In the light theme their values invert.
+   Anything that must stay dark regardless — text sitting on a gold
+   button — uses --color-on-gold, which never changes.
+   ------------------------------------------------------------------ */
 @theme {
+  /* dark theme (default) */
   --color-ink: #0b0b0f;
   --color-ink-2: #13131b;
   --color-ink-3: #1e1e2a;
@@ -21,10 +35,19 @@
   --color-gold-lite: #ffc93c;
   --color-gold-deep: #bf9412;
 
+  /* Constant across themes: gold is a light surface in both, so text on it
+     is always near-black. */
+  --color-on-gold: #0b0b0f;
+
+  /* Gold used as TEXT rather than as a surface. On ink, brand gold clears
+     9:1. On a near-white ground it only manages ~2.2:1, so the light theme
+     swaps in a deeper gold — see the [data-theme="light"] block. */
+  --color-gold-text: #e3a812;
+
   /* energetic accents, harmonised around the gold */
   --color-coral: #ff5e5b;
   --color-teal: #14b8a6;
-  --color-violet: #8b5cf6;
+  --color-violet: #a78bfa;  /* was #8b5cf6 — only 4.36:1 as text on a card */
   --color-sky: #38bdf8;
 
   --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
@@ -32,6 +55,63 @@
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Depth reads differently per theme: on ink a heavy black shadow is invisible,
+   on paper it's a smudge. Kept as tokens so .card et al. don't need forking. */
+:root {
+  --shadow-card: 0 26px 60px -22px rgba(0, 0, 0, 0.85);
+  --noise-opacity: 0.035;
+  --photo-opacity: 0.25;
+  --gold-text-gradient: linear-gradient(
+    100deg, var(--color-gold-lite), var(--color-gold) 45%, #fff3c9 75%, var(--color-gold)
+  );
+}
+
+/* ---------------------------- LIGHT THEME ----------------------------
+   Higher specificity than @theme's `:root, :host`, so these win.
+   Set by the inline script in <head> before first paint. */
+:root[data-theme="light"] {
+  --color-ink: #fbf9f3;    /* page ground — warm off-white, echoes brand cream */
+  --color-ink-2: #ffffff;  /* cards lift off the ground */
+  --color-ink-3: #efe9da;
+  --color-cream: #17161c;  /* page text — warm near-black */
+  --color-cream-2: #2c2a35;
+
+  /* Brand gold on near-white is ~2.2:1 — unusable as text. These deeper
+     golds are measured against #fbf9f3, not eyeballed. */
+  --color-gold-text: #7d5800;  /* 6.1:1 on the light ground */
+  /* Every stop is checked against #fbf9f3: the lightest (#a3780a) is 3.8:1,
+     clearing the 3:1 large-text floor. The dark theme's #fff3c9 highlight
+     would have been 1.1:1 here. */
+  --gold-text-gradient: linear-gradient(
+    100deg, #9c6f04, #7d5800 45%, #a3780a 75%, #7d5800
+  );
+
+  /* The accents are tuned for ink; on a white card they measure 2.1-4.2:1.
+     These darker mixes clear 4.5:1 as text and still read as the same hues
+     behind the /12 background tints. */
+  --color-teal: #0f766e;    /* 5.47:1 on white */
+  --color-coral: #c0392f;   /* 5.43:1 */
+  --color-violet: #6d28d9;  /* 7.10:1 */
+  --color-sky: #0369a1;     /* 5.93:1 */
+
+  --shadow-card: 0 18px 45px -20px rgba(23, 22, 28, 0.28);
+  --noise-opacity: 0.02;
+  --photo-opacity: 0.5;
+}
+
+/* Gold is only ever a TEXT colour in these utilities (never a surface — that's
+   bg-gold, which must stay brand gold in both themes). On the light ground the
+   brand gold measures 2.0:1, so redirect them to the accessible gold. Listed
+   explicitly rather than with [class*="text-gold"], which would also match the
+   hover: variants and colour them permanently. */
+:root[data-theme="light"] .text-gold,
+:root[data-theme="light"] .text-gold-lite,
+:root[data-theme="light"] .hover\:text-gold:hover,
+:root[data-theme="light"] .hover\:text-gold-lite:hover,
+:root[data-theme="light"] .group:hover .group-hover\:text-gold-lite {
+  color: var(--color-gold-text);
 }
 
 /* ============================================================
@@ -69,7 +149,7 @@
 
   ::selection {
     background: var(--color-gold);
-    color: var(--color-ink);
+    color: var(--color-on-gold);
   }
 
   :focus-visible {
@@ -123,7 +203,7 @@
 
   .btn-gold {
     background: var(--color-gold);
-    color: var(--color-ink);
+    color: var(--color-on-gold);
     box-shadow: 0 6px 24px -6px color-mix(in srgb, var(--color-gold) 70%, transparent);
   }
   /* sheen sweep */
@@ -151,7 +231,7 @@
   .btn-ghost:hover {
     transform: translateY(-3px) scale(1.02);
     border-color: var(--color-gold);
-    color: var(--color-gold-lite);
+    color: var(--color-gold-text);
     box-shadow: 0 12px 32px -10px color-mix(in srgb, var(--color-gold) 60%, transparent);
   }
 
@@ -173,7 +253,7 @@
     font-weight: 800;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-gold);
+    color: var(--color-gold-text);
   }
   .eyebrow::before {
     content: "";
@@ -197,7 +277,7 @@
   .card:hover {
     transform: translateY(-8px);
     border-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
-    box-shadow: 0 26px 60px -22px rgba(0, 0, 0, 0.85),
+    box-shadow: var(--shadow-card),
       0 0 0 1px color-mix(in srgb, var(--color-gold) 18%, transparent);
   }
   /* gold glow that follows nothing — just blooms on hover */
@@ -284,6 +364,27 @@
     transform-origin: left;
   }
 
+  /* ---- Logo (per-theme variant) ----------------------- */
+  .logo-light { display: none; }
+  :root[data-theme="light"] .logo-dark { display: none; }
+  :root[data-theme="light"] .logo-light { display: block; }
+
+  /* ---- Theme toggle ----------------------------------- */
+  /* The icon advertises the destination, not the current state. */
+  .theme-icon-moon { display: none; }
+  :root[data-theme="light"] .theme-icon-sun { display: none; }
+  :root[data-theme="light"] .theme-icon-moon { display: block; }
+
+  /* Cross-fade the palette on toggle. Only while .theming is set, so the
+     transition never fires on initial paint or on unrelated hovers. */
+  .theming,
+  .theming *,
+  .theming *::before,
+  .theming *::after {
+    transition: background-color 0.32s ease, color 0.32s ease,
+      border-color 0.32s ease, box-shadow 0.32s ease !important;
+  }
+
   /* ---- Burger ----------------------------------------- */
   .burger-line {
     position: absolute;
@@ -337,8 +438,12 @@
     color: var(--color-gold-lite);
   }
 
+  .hero-photo {
+    opacity: var(--photo-opacity);
+  }
+
   .gold-text {
-    background: linear-gradient(100deg, var(--color-gold-lite), var(--color-gold) 45%, #fff3c9 75%, var(--color-gold));
+    background: var(--gold-text-gradient);
     background-size: 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -373,7 +478,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.035;
+    opacity: var(--noise-opacity);
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   }
@@ -504,7 +609,7 @@
   .gold-text {
     /* keep it legible without the shimmer sweep */
     background: none;
-    color: var(--color-gold-lite);
+    color: var(--color-gold-text);
   }
 
   #cursor-dot,

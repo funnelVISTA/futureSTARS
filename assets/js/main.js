@@ -161,8 +161,35 @@
   }, { threshold: 0.6 });
   $$('[data-count]').forEach((el) => countIO.observe(el));
 
+  /* --------------------------------------------------------- theme toggle */
+  // The stored theme is applied by an inline script in <head> before paint;
+  // this only handles switching. Dark is the default when nothing is stored.
+  const themeBtn = $('#theme-toggle');
+  const htmlEl = document.documentElement;
+
+  const syncThemeBtn = () => {
+    const light = htmlEl.getAttribute('data-theme') === 'light';
+    themeBtn?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+    // keep the browser chrome in step with the page
+    $('meta[name="theme-color"]')?.setAttribute('content', light ? '#fbf9f3' : '#0b0b0f');
+  };
+
+  themeBtn?.addEventListener('click', () => {
+    const next = htmlEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (!reduced) {
+      htmlEl.classList.add('theming');
+      clearTimeout(themeBtn._t);
+      themeBtn._t = setTimeout(() => htmlEl.classList.remove('theming'), 360);
+    }
+    htmlEl.setAttribute('data-theme', next);
+    try { localStorage.setItem('fsf-theme', next); } catch (e) { /* private mode */ }
+    syncThemeBtn();
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+  });
+  syncThemeBtn();
+
   /* ----------------------------------------------------------------- nav */
-  const nav = $('#nav'), navbar = $('#navbar'), navlogo = $('#navlogo');
+  const nav = $('#nav'), navbar = $('#navbar'), navlogos = $$('.navlogo');
   const onScroll = () => {
     const y = window.scrollY;
     // shrink + solidify
@@ -170,7 +197,7 @@
     navbar.classList.toggle('bg-ink/85', y > 60);
     navbar.classList.toggle('shadow-2xl', y > 60);
     navbar.classList.toggle('border-cream/20', y > 60);
-    navlogo.classList.toggle('!h-9', y > 60);
+    navlogos.forEach((el) => el.classList.toggle('!h-9', y > 60));
     nav.classList.toggle('!mt-0', y > 60);
 
     // progress
