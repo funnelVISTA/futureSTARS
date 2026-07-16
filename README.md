@@ -33,14 +33,22 @@ npm run dev       # watch mode
 
 ## Deploy
 
-It's a static folder — drop it on any host.
+**Live:** https://futurestarsfoundation.vercel.app
+
+Vercel builds straight from this repo — pushing *is* deploying, there is no separate
+deploy step:
 
 ```bash
-npx vercel deploy --prod      # or: netlify deploy --prod --dir .
+git push                      # main    → builds and updates production
+git push origin some-branch   # branch  → throwaway preview URL, production untouched
 ```
 
-Do **not** deploy `node_modules/` or `src/`; only `index.html` + `assets/` are needed
-at runtime.
+Vercel runs `npm run build` (recompiling Tailwind) and serves the repo root, per
+[`vercel.json`](vercel.json). `node_modules/` is excluded via `.vercelignore`; `src/`
+ships but is never served.
+
+Nothing needs building locally to deploy — `assets/css/styles.css` is committed, so the
+site also works opened straight from disk.
 
 ---
 
