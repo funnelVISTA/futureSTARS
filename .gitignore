@@ -7,3 +7,6 @@ node_modules/
 # watermark (see README). Kept locally for review, not published in a public
 # repo. Nothing in the build references it — safe to delete outright.
 assets/img/home-about.png
+
+# Client discovery doc — not part of the deployable site
+Discovery_Future_Stars_Foundation.pdf
