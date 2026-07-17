@@ -99,7 +99,7 @@
           <h3 class="text-lg leading-snug">${esc(p.title)}</h3>
           <p class="mt-3 flex-1 text-sm leading-relaxed text-cream/60 line-clamp-3">${esc(p.body)}</p>
           <button class="mt-5 inline-flex items-center gap-2 self-start text-sm font-bold ${a.text} transition-all hover:gap-3.5"
-                  data-modal-open="program" data-index="${i}" data-cursor="hot">
+                  data-modal-open="program" data-index="${i}">
             Learn More
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
@@ -111,7 +111,7 @@
   const bgrid = $('#blog-grid');
   if (bgrid) {
     bgrid.innerHTML = POSTS.map((p, i) => `
-      <a href="${p.href}" target="_blank" rel="noopener" class="card group flex flex-col" data-reveal style="--d:${i * 110}ms" data-tilt data-cursor="hot">
+      <a href="${p.href}" target="_blank" rel="noopener" class="card group flex flex-col" data-reveal style="--d:${i * 110}ms" data-tilt>
         <div class="relative aspect-[16/11] overflow-hidden">
           <img src="assets/img/${p.img}" alt="" loading="lazy" decoding="async"
                class="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110" />
@@ -247,52 +247,9 @@
     });
   });
 
-  /* ------------------------------------------------------- custom cursor */
+  // Pointer capability check — the 3D card tilt still needs it. (The custom
+  // cursor was removed in favour of the native one.)
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (fine && !reduced) {
-    const dot = $('#cursor-dot'), ring = $('#cursor-ring');
-    let rx = 0, ry = 0, mx = 0, my = 0, ready = false, raf = 0;
-
-    // Only reveal once a real mouse has actually moved. Revealing up front parks
-    // the ring at translate(0,0) — a gold blob in the top-left corner over the
-    // logo — and on a device that never fires a mouse move it stays there.
-    // pointerType filters out touch, which reports hover:hover on some browsers.
-    const show = (x, y) => {
-      ready = true;
-      rx = mx = x; ry = my = y;              // start at the cursor, don't fly in from 0,0
-      document.body.classList.add('cursor-ready');
-      if (!raf) raf = requestAnimationFrame(loop);
-    };
-    const hide = () => {
-      ready = false;
-      document.body.classList.remove('cursor-ready', 'cursor-hot');
-      if (raf) { cancelAnimationFrame(raf); raf = 0; }
-    };
-
-    function loop() {
-      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-      ring.style.transform = `translate3d(${rx - 17}px, ${ry - 17}px, 0)`;
-      raf = requestAnimationFrame(loop);
-    }
-
-    window.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      if (!ready) show(e.clientX, e.clientY);
-      mx = e.clientX; my = e.clientY;
-      dot.style.transform = `translate3d(${mx - 3}px, ${my - 3}px, 0)`;
-    }, { passive: true });
-
-    // a touch means there's no mouse in play — retract until one moves again
-    window.addEventListener('touchstart', hide, { passive: true });
-    window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') hide(); }, { passive: true });
-    document.addEventListener('mouseleave', hide);
-
-    document.addEventListener('pointerover', (e) => {
-      if (!ready) return;
-      const hot = e.target.closest('a, button, [data-cursor="hot"], input, textarea, select');
-      document.body.classList.toggle('cursor-hot', !!hot);
-    });
-  }
 
   /* --------------------------------------------------------------- toast */
   let toastT;

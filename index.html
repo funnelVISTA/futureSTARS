@@ -56,10 +56,6 @@
   <div id="progress" class="h-full origin-left scale-x-0 bg-gradient-to-r from-gold via-gold-lite to-coral"></div>
 </div>
 
-<!-- custom cursor -->
-<div id="cursor-ring" aria-hidden="true"></div>
-<div id="cursor-dot" aria-hidden="true"></div>
-
 <!-- ============================== NAV ============================== -->
 <header id="nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
   <!-- z-50 keeps the bar (and the burger, which doubles as the close button)
@@ -69,7 +65,7 @@
       <!-- The logo's figure and tagline are cream: 18:1 on ink, 1.04:1 on the
            light ground — i.e. invisible. The -light variant recolours those to
            ink and keeps the gold wordmark. Swapped in CSS so there's no flash. -->
-      <a href="#home" class="flex items-center gap-3" data-cursor="hot">
+      <a href="#home" class="flex items-center gap-3">
         <img src="assets/img/headerlogo.png" alt="Future Stars Foundation" class="navlogo logo-dark h-11 w-auto transition-all duration-500" width="226" height="164" />
         <img src="assets/img/headerlogo-light.png" alt="Future Stars Foundation" class="navlogo logo-light h-11 w-auto transition-all duration-500" width="226" height="164" />
         <span class="sr-only">Future Stars Foundation — home</span>
@@ -89,7 +85,7 @@
         <!-- Icon shows the theme you'd switch TO: sun while dark, moon while light. -->
         <button id="theme-toggle" type="button"
                 class="grid h-11 w-11 place-items-center rounded-xl border border-cream/15 text-cream/75 transition-all hover:-translate-y-0.5 hover:border-gold hover:text-gold"
-                aria-label="Switch to light theme" data-cursor="hot">
+                aria-label="Switch to light theme">
           <svg class="theme-icon-sun h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4.2"/>
             <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>
@@ -99,7 +95,7 @@
           </svg>
         </button>
 
-        <a href="#donate" class="btn btn-gold hidden !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex" data-cursor="hot">
+        <a href="#donate" class="btn btn-gold hidden !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex">
           Donate Now
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -158,27 +154,33 @@
   </div>
 
   <!-- Parallax playground shapes (original SVG).
-       The headline column runs up to max-w-4xl on the left, so every shape is
-       kept in the right-hand gutter to avoid colliding with the copy. Below md
-       the copy goes full-bleed and there is no clear gutter, so they hide. -->
+       On desktop the headline column caps at max-w-4xl, so the shapes live in
+       the right-hand gutter. On mobile the copy is full-bleed and there is no
+       gutter — so instead of hiding them, they move into the two free bands:
+       between the nav and the eyebrow (~top 11-14%) and below the CTAs
+       (~bottom 7-10%), clear of the centred scroll cue. They sit at -z-10,
+       behind the text, so a near-miss still reads cleanly. -->
   <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-    <svg class="absolute right-[20%] top-[15%] hidden h-14 w-14 text-gold anim-float lg:block" data-par="0.28" viewBox="0 0 24 24" fill="currentColor" style="--r:-12deg"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
-    <svg class="absolute right-[7%] top-[27%] hidden h-9 w-9 text-coral anim-float md:block" data-par="0.5" viewBox="0 0 24 24" fill="currentColor" style="animation-delay:-3s;--r:18deg"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
-    <svg class="absolute right-[33%] bottom-[24%] hidden h-7 w-7 text-teal anim-float lg:block" data-par="0.42" viewBox="0 0 24 24" fill="currentColor" style="animation-delay:-5s"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
+    <!-- gold star -->
+    <svg class="absolute right-[8%] top-[11%] h-10 w-10 text-gold anim-float lg:right-[20%] lg:top-[15%] lg:h-14 lg:w-14" data-par="0.28" viewBox="0 0 24 24" fill="currentColor" style="--r:-12deg"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
+    <!-- coral star -->
+    <svg class="absolute right-[30%] top-[13%] h-6 w-6 text-coral anim-float md:right-[7%] md:top-[27%] md:h-9 md:w-9" data-par="0.5" viewBox="0 0 24 24" fill="currentColor" style="animation-delay:-3s;--r:18deg"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
+    <!-- teal star -->
+    <svg class="absolute left-[9%] bottom-[9%] h-5 w-5 text-teal anim-float lg:left-auto lg:right-[33%] lg:bottom-[24%] lg:h-7 lg:w-7" data-par="0.42" viewBox="0 0 24 24" fill="currentColor" style="animation-delay:-5s"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
 
     <!-- soccer ball -->
-    <svg class="absolute right-[8%] bottom-[14%] h-14 w-14 text-cream/25 anim-spin-slow md:right-[13%] md:h-16 md:w-16" data-par="0.34" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+    <svg class="absolute right-[7%] bottom-[9%] h-12 w-12 text-cream/25 anim-spin-slow md:right-[13%] md:bottom-[14%] md:h-16 md:w-16" data-par="0.34" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="32" cy="32" r="29"/>
       <path d="M32 14l11 8-4 13H25l-4-13z" fill="currentColor" fill-opacity=".22"/>
       <path d="M32 3v11M11 25l10 7M53 25l-10 7M20 58l5-13M44 58l-5-13"/>
     </svg>
 
     <!-- basketball -->
-    <svg class="absolute right-[26%] top-[9%] hidden h-11 w-11 text-coral/35 anim-float md:block" data-par="0.6" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" style="animation-delay:-2s">
+    <svg class="absolute left-[7%] top-[13%] h-8 w-8 text-coral/35 anim-float md:left-auto md:right-[26%] md:top-[9%] md:h-11 md:w-11" data-par="0.6" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" style="animation-delay:-2s">
       <circle cx="32" cy="32" r="29"/><path d="M3 32h58M32 3v58M11 11c12 12 12 30 0 42M53 11c-12 12-12 30 0 42"/>
     </svg>
 
-    <!-- scribble -->
+    <!-- scribble — too wide to place on a phone without crossing the copy -->
     <svg class="absolute right-[9%] top-[58%] hidden h-8 w-28 text-gold/40 lg:block" data-par="0.22" viewBox="0 0 120 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
       <path d="M3 20c14-16 28 12 42-2s28 10 42-6"/>
     </svg>
@@ -200,11 +202,11 @@
       </p>
 
       <div class="mt-10 flex flex-wrap items-center gap-4" id="hero-cta">
-        <a href="#about" class="btn btn-ghost" data-cursor="hot">
+        <a href="#about" class="btn btn-ghost">
           Learn More
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
         </a>
-        <a href="#donate" class="btn btn-gold" data-cursor="hot">
+        <a href="#donate" class="btn btn-gold">
           Donate Now
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-8-5.1-8-10.4C4 7.4 6.2 5 9.1 5c1.7 0 3 .8 2.9 2 .1-1.2 1.2-2 2.9-2C17.8 5 20 7.4 20 10.6 20 15.9 12 21 12 21z"/></svg>
         </a>
@@ -213,7 +215,7 @@
   </div>
 
   <!-- scroll cue -->
-  <a href="#about" class="absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/60 transition-colors hover:text-gold md:flex" aria-label="Scroll to About">
+  <a href="#about" class="absolute bottom-7 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/60 transition-colors hover:text-gold" aria-label="Scroll to About">
     <span class="text-[0.62rem] font-bold uppercase tracking-[0.25em]">Scroll</span>
     <span class="grid h-9 w-9 place-items-center rounded-full border border-cream/20 anim-bob">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -411,7 +413,16 @@
           <ul class="mt-8 space-y-3" data-reveal style="--d:220ms">
             <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>One-time and monthly recurring donations</li>
             <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>Debit and credit card payments</li>
-            <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>E-transfer send to: <a href="mailto:donations@futurestarsfoundation.com" class="font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">donations@futurestarsfoundation.com</a></li>
+            <!-- The address is one long unbreakable token. Inline, it forced the
+                 row wider than the card and squeezed "E-transfer send to:" into a
+                 4-word stack. Own line + min-w-0 + break-all keeps it contained. -->
+            <li class="flex items-start gap-3 text-sm text-cream/72">
+              <span class="mt-1 shrink-0 text-gold" aria-hidden="true">★</span>
+              <span class="min-w-0">
+                E-transfer send to:
+                <a href="mailto:donations@futurestarsfoundation.com" class="mt-0.5 block break-all font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">donations@futurestarsfoundation.com</a>
+              </span>
+            </li>
             <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>Direct Deposit</li>
           </ul>
         </div>
@@ -450,7 +461,7 @@
             </div>
           </div>
 
-          <a href="https://futurestarsfoundation.com/donation/" target="_blank" rel="noopener" class="btn btn-gold mt-6 w-full" id="donate-go" data-cursor="hot">
+          <a href="https://futurestarsfoundation.com/donation/" target="_blank" rel="noopener" class="btn btn-gold mt-6 w-full" id="donate-go">
             <span id="donate-go-text">Donate Now</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
@@ -487,7 +498,7 @@
           programs. From coaching and tutoring to helping at events, your contribution makes a
           lasting difference.
         </p>
-        <button class="btn btn-gold mt-6 !py-3 !text-[0.85rem]" data-modal-open="volunteer" data-cursor="hot">Volunteer Sign-Up</button>
+        <button class="btn btn-gold mt-6 !py-3 !text-[0.85rem]" data-modal-open="volunteer">Volunteer Sign-Up</button>
       </article>
 
       <article class="card flex flex-col p-7" data-reveal style="--d:100ms" data-tilt>
@@ -498,7 +509,7 @@
           reach and impact. Together, we can create programs and opportunities that empower the next
           generation.
         </p>
-        <button class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]" data-modal-open="partner" data-cursor="hot">Partner With Us</button>
+        <button class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]" data-modal-open="partner">Partner With Us</button>
       </article>
 
       <article class="card flex flex-col p-7" data-reveal style="--d:200ms" data-tilt>
@@ -509,7 +520,7 @@
           mentorship, and essential resources. Every contribution—big or small—helps build brighter
           futures.
         </p>
-        <a href="#donate" class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]" data-cursor="hot">Donate Now</a>
+        <a href="#donate" class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]">Donate Now</a>
       </article>
 
       <article class="card flex flex-col p-7" data-reveal style="--d:300ms" data-tilt>
@@ -519,7 +530,7 @@
           Participate in or sponsor one of our community events, youth tournaments, or mentorship
           programs. Be part of the action and make an immediate impact.
         </p>
-        <a href="#contact" class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]" data-cursor="hot">Get in touch</a>
+        <a href="#contact" class="btn btn-ghost mt-6 !py-3 !text-[0.85rem]">Get in touch</a>
       </article>
 
     </div>
@@ -536,7 +547,7 @@
           Straight from the <span class="gold-text">sidelines</span>.
         </h2>
       </div>
-      <a href="https://futurestarsfoundation.com/blogs" target="_blank" rel="noopener" class="btn btn-ghost !py-3 !text-[0.85rem]" data-reveal data-cursor="hot">
+      <a href="https://futurestarsfoundation.com/blogs" target="_blank" rel="noopener" class="btn btn-ghost !py-3 !text-[0.85rem]" data-reveal>
         All posts
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -563,7 +574,7 @@
         </h2>
 
         <div class="mt-10 space-y-3" data-reveal style="--d:150ms">
-          <a href="tel:+17787071921" class="card flex items-center gap-4 p-4" data-cursor="hot">
+          <a href="tel:+17787071921" class="card flex items-center gap-4 p-4">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gold/12 ring-1 ring-gold/25" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gold"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
             </span>
@@ -573,7 +584,7 @@
             </div>
           </a>
 
-          <a href="mailto:info@futurestarsfoundation.com" class="card flex items-center gap-4 p-4" data-cursor="hot">
+          <a href="mailto:info@futurestarsfoundation.com" class="card flex items-center gap-4 p-4">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/12 ring-1 ring-teal/25" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-teal"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
             </span>
@@ -583,7 +594,7 @@
             </div>
           </a>
 
-          <a href="https://maps.google.com/?q=9835+King+George+Blvd,+Surrey+BC+V3T+5H6" target="_blank" rel="noopener" class="card flex items-center gap-4 p-4" data-cursor="hot">
+          <a href="https://maps.google.com/?q=9835+King+George+Blvd,+Surrey+BC+V3T+5H6" target="_blank" rel="noopener" class="card flex items-center gap-4 p-4">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-coral/12 ring-1 ring-coral/25" aria-hidden="true">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-coral"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </span>
@@ -596,10 +607,10 @@
 
         <div class="mt-8 flex items-center gap-3" data-reveal style="--d:220ms">
           <span class="text-[0.7rem] font-bold uppercase tracking-wider text-cream/60">Follow</span>
-          <a href="https://www.facebook.com/profile.php?id=61581628381135" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Facebook" data-cursor="hot">
+          <a href="https://www.facebook.com/profile.php?id=61581628381135" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Facebook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
           </a>
-          <a href="https://www.instagram.com/futurestarsfoundation/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Instagram" data-cursor="hot">
+          <a href="https://www.instagram.com/futurestarsfoundation/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Instagram">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
           </a>
         </div>
@@ -631,7 +642,7 @@
           <textarea id="c-msg" name="message" rows="5" class="field resize-y" required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-gold mt-7 w-full" data-cursor="hot">
+        <button type="submit" class="btn btn-gold mt-7 w-full">
           Send message
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
@@ -688,8 +699,11 @@
       </div>
     </div>
 
-    <div class="mt-12 border-t border-cream/10 pt-6 text-center">
+    <div class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-cream/10 pt-6 sm:flex-row">
       <p class="text-xs text-cream/60">© 2025 Future Stars Foundation. All Rights Reserved.</p>
+      <p class="text-xs text-cream/60">
+        Web design by <span class="font-semibold text-gold">Funnel Vista Marketing</span>
+      </p>
     </div>
   </div>
 </footer>

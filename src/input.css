@@ -535,50 +535,6 @@
 .no-js [data-reveal] { opacity: 1; transform: none; }
 
 /* ============================================================
-   Custom cursor (desktop, fine-pointer only)
-   ============================================================ */
-#cursor-dot,
-#cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 99px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-#cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-gold-lite);
-}
-#cursor-ring {
-  width: 34px;
-  height: 34px;
-  border: 1.5px solid color-mix(in srgb, var(--color-gold) 70%, transparent);
-  transition: opacity 0.3s ease, width 0.3s var(--ease-spring),
-    height 0.3s var(--ease-spring), background 0.3s ease, border-color 0.3s ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  body.cursor-ready #cursor-dot,
-  body.cursor-ready #cursor-ring { opacity: 1; }
-  body.cursor-ready { cursor: none; }
-  body.cursor-ready a,
-  body.cursor-ready button,
-  body.cursor-ready input,
-  body.cursor-ready textarea,
-  body.cursor-ready select,
-  body.cursor-ready label { cursor: none; }
-  body.cursor-ready.cursor-hot #cursor-ring {
-    width: 62px;
-    height: 62px;
-    background: color-mix(in srgb, var(--color-gold) 14%, transparent);
-    border-color: var(--color-gold-lite);
-  }
-}
-
-/* ============================================================
    Accessibility — honour reduced motion everywhere
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -611,8 +567,4 @@
     background: none;
     color: var(--color-gold-text);
   }
-
-  #cursor-dot,
-  #cursor-ring { display: none !important; }
-  body.cursor-ready { cursor: auto !important; }
 }
