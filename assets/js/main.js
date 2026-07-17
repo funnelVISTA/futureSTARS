@@ -12,37 +12,37 @@
   /* ---------------------------------------------------------------- data */
   const PROGRAMS = [
     {
-      n: '01', img: 'program1.png', accent: 'gold', icon: '⚽',
+      n: '01', img: 'program1.png', accent: 'gold', icon: 'ball',
       title: 'Sports Development & Unity Programs',
       body: 'We utilize the power of sport to build discipline, teamwork, and confidence in youth. Our programs provide access to structured training, experienced coaches, essential equipment and participation in local and regional tournaments.'
     },
     {
-      n: '02', img: 'program2.png', accent: 'teal', icon: '📚',
+      n: '02', img: 'program2.png', accent: 'teal', icon: 'book',
       title: 'Education & Career Support',
       body: 'We help youth excel in school and prepare them for the future through academic support, tutoring, scholarships, and school supplies. Beyond the classroom, we offer vocational training, digital skills development, career mentorship, and post-secondary guidance.'
     },
     {
-      n: '03', img: 'program3.png', accent: 'coral', icon: '🎒',
+      n: '03', img: 'program3.png', accent: 'coral', icon: 'backpack',
       title: 'Basic Needs and Welfare Support Services',
       body: 'We ensure that the vulnerable youth have access to the essentials they need to live and learn with dignity. Our support includes food assistance, clothing, hygiene items, and temporary housing when needed.'
     },
     {
-      n: '04', img: 'program4.png', accent: 'violet', icon: '🌟',
+      n: '04', img: 'program4.png', accent: 'violet', icon: 'star',
       title: 'Mentorship, Leadership & Life Skills Development',
       body: 'Youth in our programs are supported by caring mentors who offer guidance, encouragement, and consistent support. Our initiatives focus on building confidence, resilience, strong decision-making, and a sense of purpose.'
     },
     {
-      n: '05', img: 'program5.png', accent: 'sky', icon: '🌍',
+      n: '05', img: 'program5.png', accent: 'sky', icon: 'globe',
       title: 'Settlement & Cultural Integration',
       body: 'We provide support to newcomers and immigrant families as they adjust to life in Canada through social programs, peer connections, and cultural exchange.'
     },
     {
-      n: '06', img: 'program6.png', accent: 'gold', icon: '🏡',
+      n: '06', img: 'program6.png', accent: 'gold', icon: 'home',
       title: 'Community Development',
       body: 'Our community-driven initiatives create safe, inclusive spaces where young people can grow, connect, and contribute. We organize outreach projects, local events, youth training camps, and wellness programs.'
     },
     {
-      n: '07', img: 'program7.png', accent: 'teal', icon: '🏗️',
+      n: '07', img: 'program7.png', accent: 'teal', icon: 'build',
       title: 'Infrastructure & International Outreach: Home Centre & Dormitory',
       body: 'To support long-term impact, FSF is developing physical spaces that provide safety, structure, and opportunity. In Canada, our planned “Home Center” will serve as an after-school hub for sports, recreation, learning, and mentorship. In Sub-Saharan Africa, we are building a residential training facility — a dormitory-style environment where young athletes and students can live, train, and grow in a supportive setting.'
     }
@@ -80,6 +80,28 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+
+  /* --------------------------------------------------------------- icons */
+  // Duotone SVG, replacing emoji: emoji render as a different illustration on
+  // every OS, so the look wasn't ours to control, and they clashed with the
+  // line icons already in the nav/contact. A tinted mass + a solid detail layer,
+  // all currentColor — so each icon inherits its card's accent and both themes.
+  const ICONS = {
+    ball: `<circle cx="12" cy="12" r="9.5" fill="currentColor" opacity=".25"/><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M12 7.1l3.15 2.3-1.2 3.7h-3.9l-1.2-3.7z" fill="currentColor"/><path d="M12 2.6v4.4M4.4 8.9l4.4 1.4M19.6 8.9l-4.4 1.4M7.6 19.2l2.3-3.1M16.4 19.2l-2.3-3.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>`,
+    book: `<path d="M4 4.5h6.2c1 0 1.8.8 1.8 1.8V20c0-.9-.7-1.6-1.6-1.6H4z" fill="currentColor" opacity=".3"/><path d="M20 4.5h-6.2c-1 0-1.8.8-1.8 1.8V20c0-.9.7-1.6 1.6-1.6H20z" fill="currentColor"/><path d="M4 4.5v13.9M20 4.5v13.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>`,
+    backpack: `<path d="M5 11.5A5 5 0 0110 6.5h4a5 5 0 015 5v7A2.5 2.5 0 0116.5 21h-9A2.5 2.5 0 015 18.5z" fill="currentColor" opacity=".3"/><path d="M5 11.5A5 5 0 0110 6.5h4a5 5 0 015 5v7A2.5 2.5 0 0116.5 21h-9A2.5 2.5 0 015 18.5z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6.5V5.6A2 2 0 0112 3.6a2 2 0 012 2v.9" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M8.6 14h6.8a1 1 0 011 1v3.6H7.6V15a1 1 0 011-1z" fill="currentColor"/>`,
+    star: `<circle cx="12" cy="12" r="9.5" fill="currentColor" opacity=".25"/><path d="M12 5.6l1.85 4.1 4.45.45-3.33 3 .95 4.4L12 15.35 8.08 17.55l.95-4.4-3.33-3 4.45-.45z" fill="currentColor"/>`,
+    globe: `<circle cx="12" cy="12" r="9.5" fill="currentColor" opacity=".25"/><path d="M2.6 12h18.8M12 2.6c2.6 2.7 2.6 16.1 0 18.8M12 2.6c-2.6 2.7-2.6 16.1 0 18.8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6" fill="none"/>`,
+    home: `<path d="M4 10.4l8-6 8 6V19a1.6 1.6 0 01-1.6 1.6H5.6A1.6 1.6 0 014 19z" fill="currentColor" opacity=".3"/><path d="M2.5 11.2L12 4l9.5 7.2" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.6 20.6v-5.3h4.8v5.3z" fill="currentColor"/>`,
+    build: `<path d="M3.6 20.6V9.2a1 1 0 01.62-.93l4.9-1.96a1 1 0 011.38.93V20.6z" fill="currentColor" opacity=".3"/><path d="M10.5 20.6v-9.1a1 1 0 011.32-.95l7 2.33a1 1 0 01.68.95V20.6z" fill="currentColor"/><path d="M5.9 11.4v1.6M5.9 15.4v1.6M8.2 11.4v1.6M8.2 15.4v1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none" opacity=".55"/><path d="M2.4 20.6h19.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/>`,
+    hands: `<circle cx="11.2" cy="5.4" r="2.5" fill="currentColor"/><path d="M11.2 9.1c-2.4 0-4 1.5-4.4 3.7l-1 5.4a1.5 1.5 0 002.95.55l.7-3.75V21a1.6 1.6 0 003.2 0v-4h.2v4a1.6 1.6 0 003.2 0v-8.2l2.4-3.5a1.4 1.4 0 00-2.3-1.6l-2.2 3.2z" fill="currentColor" opacity=".35"/><path d="M11.2 9.1c-2.4 0-4 1.5-4.4 3.7l-1 5.4a1.5 1.5 0 002.95.55l.7-3.75V21a1.6 1.6 0 003.2 0v-4h.2v4a1.6 1.6 0 003.2 0v-8.2l2.4-3.5a1.4 1.4 0 00-2.3-1.6l-2.2 3.2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M19.4 3.6l.5 1.15 1.25.12-.94.84.27 1.23-1.08-.64-1.08.64.27-1.23-.94-.84 1.25-.12z" fill="currentColor"/>`,
+    rings: `<circle cx="8.6" cy="12" r="5.6" fill="currentColor" opacity=".3"/><circle cx="8.6" cy="12" r="5.6" stroke="currentColor" stroke-width="1.7" fill="none"/><circle cx="15.4" cy="12" r="5.6" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M12 7.35a5.6 5.6 0 000 9.3 5.6 5.6 0 000-9.3z" fill="currentColor"/>`,
+    heart: `<path d="M12 20.8S3.6 15.4 3.6 9.9C3.6 6.6 5.9 4.2 8.9 4.2c1.8 0 3.1.9 3.1 2 0-1.1 1.3-2 3.1-2 3 0 5.3 2.4 5.3 5.7 0 5.5-8.4 10.9-8.4 10.9z" fill="currentColor" opacity=".3"/><path d="M12 20.8S3.6 15.4 3.6 9.9C3.6 6.6 5.9 4.2 8.9 4.2c1.8 0 3.1.9 3.1 2 0-1.1 1.3-2 3.1-2 3 0 5.3 2.4 5.3 5.7 0 5.5-8.4 10.9-8.4 10.9z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>`,
+    calendar: `<rect x="3.4" y="5.6" width="17.2" height="15" rx="2.4" fill="currentColor" opacity=".3"/><rect x="3.4" y="5.6" width="17.2" height="15" rx="2.4" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M3.4 10.2h17.2" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M8 3.4v3.6M16 3.4v3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M10.4 13.2h3.2v3.2h-3.2z" fill="currentColor"/>`
+  };
+  const icon = (name, cls = 'h-full w-full') =>
+    `<svg viewBox="0 0 24 24" class="${cls}" fill="none" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+
   /* ------------------------------------------------------- render: cards */
   const grid = $('#program-grid');
   if (grid) {
@@ -92,7 +114,7 @@
                class="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110" />
           <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-2 via-ink-2/25 to-transparent"></div>
           <span class="absolute left-4 top-4 rounded-lg bg-ink/70 px-2.5 py-1 font-display text-xs font-extrabold tracking-widest text-gold backdrop-blur-md">${p.n}</span>
-          <span class="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-xl ${a.bg} text-lg ring-1 ${a.ring} backdrop-blur-md transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" aria-hidden="true">${p.icon}</span>
+          <span class="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-xl ${a.bg} ${a.text} ring-1 ${a.ring} backdrop-blur-md transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" aria-hidden="true">${icon(p.icon, 'h-5 w-5')}</span>
         </div>
 
         <div class="flex flex-1 flex-col p-6">
