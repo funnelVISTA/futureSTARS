@@ -273,8 +273,11 @@
     mEyebrow.textContent = eyebrow;
     mTitle.textContent = title;
     mBody.innerHTML = html;
-    root.classList.remove('hidden');
-    root.classList.add('pointer-events-auto');
+    // Must REMOVE pointer-events-none, not add pointer-events-auto: both would
+    // then be in the class list and CSS source order decides the winner —
+    // .pointer-events-none is emitted later by Tailwind, so it won and the whole
+    // modal stayed click-through (X and its buttons did nothing).
+    root.classList.remove('hidden', 'pointer-events-none');
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(() => {
       backdrop.classList.remove('opacity-0');
@@ -288,8 +291,7 @@
     panel.classList.add('opacity-0', 'translate-y-6', 'scale-[0.98]');
     document.body.style.overflow = '';
     setTimeout(() => {
-      root.classList.add('hidden');
-      root.classList.remove('pointer-events-auto');
+      root.classList.add('hidden', 'pointer-events-none');
       mBody.innerHTML = '';
       lastFocus?.focus();
     }, 320);
