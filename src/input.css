@@ -473,21 +473,32 @@
     letter-spacing: 0.03em;
   }
 
-  /* Phones: no room to swing off a side edge, and a rotated board would sit
-     over the copy — tuck it into the bottom-right corner instead. */
+  /* Phones.
+     The swing-from-the-edge trick needs somewhere to swing to, and a phone has
+     no gutter. The first attempt anchored to the corner and let it hang off by
+     translate(14%,18%) — which clipped 24px off the right and 37px off the
+     bottom, cutting the text, and left it permanently half-visible so it never
+     looked like it reacted to scroll. So on small screens it stops pretending
+     to be a swinging sign: it sits fully on-screen inset from the corner and
+     slides up from below the fold, which reads clearly as a response to scroll. */
   @media (max-width: 767px) {
     .donate-sign {
       top: auto;
-      bottom: 0;
-      width: 10.5rem;
-      transform: translate(30%, 130%) rotate(-4deg);
+      bottom: 1rem;
+      right: 1rem;
+      width: 9.75rem;
+      transform-origin: center;
+      transform: translateY(190%) rotate(-4deg);
     }
     .donate-sign.show,
     .no-js .donate-sign {
-      transform: translate(14%, 18%) rotate(-4deg);
+      transform: translateY(0) rotate(-4deg);
     }
-    .donate-sign a { padding: 0.85rem 0.9rem 1.6rem; }
-    .donate-sign .sign-title { font-size: 1.05rem; }
+    .donate-sign a { padding: 0.85rem 0.85rem 0.95rem; }
+    .donate-sign a::before { top: 0.35rem; width: 0.45rem; height: 0.45rem; }
+    .donate-sign .sign-eyebrow { margin-top: 0.3rem; font-size: 0.55rem; }
+    .donate-sign .sign-title { font-size: 1.02rem; }
+    .donate-sign .sign-pill { margin-top: 0.5rem; padding: 0.32rem 0.7rem; font-size: 0.62rem; }
   }
 
   /* ---- Burger ----------------------------------------- */
