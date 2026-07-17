@@ -210,6 +210,19 @@
   });
   syncThemeBtn();
 
+  /* ------------------------------------------------------ donate signpost */
+  // Swings in past the hero, and retracts while #donate is on screen — nagging
+  // someone to donate while they're reading the donate section is just noise.
+  const sign = $('#donate-sign');
+  let pastHero = false, atDonate = false;
+  const syncSign = () => sign?.classList.toggle('show', pastHero && !atDonate);
+
+  if (sign) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((e) => { atDonate = e.isIntersecting; syncSign(); });
+    }, { threshold: 0.12 }).observe($('#donate'));
+  }
+
   /* ----------------------------------------------------------------- nav */
   const nav = $('#nav'), navbar = $('#navbar'), navlogos = $$('.navlogo');
   const onScroll = () => {
@@ -225,6 +238,9 @@
     // progress
     const h = document.documentElement.scrollHeight - window.innerHeight;
     $('#progress').style.transform = `scaleX(${h > 0 ? y / h : 0})`;
+
+    const past = y > window.innerHeight * 0.55;
+    if (past !== pastHero) { pastHero = past; syncSign(); }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

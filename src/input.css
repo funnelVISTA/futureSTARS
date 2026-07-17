@@ -385,6 +385,111 @@
       border-color 0.32s ease, box-shadow 0.32s ease !important;
   }
 
+  /* ---- Floating donate signpost ----------------------- */
+  /* Pivots from the pin like a nailed sign: transform-origin sits at the
+     right edge, so rotating swings the board in and out of view. JS only
+     toggles .show. Sits below the nav (50), mobile menu (40) and modal (80)
+     so it can never cover them. */
+  .donate-sign {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 35;
+    width: 13rem;
+    transform: translate(42%, -50%) rotate(72deg);
+    transform-origin: right bottom;
+    transition: transform 0.7s var(--ease-out-expo);
+    will-change: transform;
+  }
+  .donate-sign.show {
+    transform: translate(30%, -50%) rotate(-16deg);
+  }
+  /* Without JS nothing toggles .show, so pin it open rather than leave it
+     swung off-screen. */
+  .no-js .donate-sign {
+    transform: translate(30%, -50%) rotate(-16deg);
+  }
+
+  .donate-sign a {
+    display: block;
+    padding: 1.1rem 1.15rem 1.25rem;
+    border-radius: 1rem;
+    background: var(--color-gold);
+    color: var(--color-on-gold);
+    box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.65),
+      inset 0 0 0 1px color-mix(in srgb, #fff 35%, transparent);
+    transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+  }
+  /* the sign dips on hover, as if tugged */
+  .donate-sign a:hover {
+    transform: translateY(6px) rotate(2deg);
+    box-shadow: 0 26px 50px -12px rgba(0, 0, 0, 0.75),
+      inset 0 0 0 1px color-mix(in srgb, #fff 55%, transparent);
+  }
+
+  /* the nail it hangs from */
+  .donate-sign a::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--color-on-gold) 55%, transparent);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    transform: translateX(-50%);
+  }
+
+  .donate-sign .sign-eyebrow {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+  .donate-sign .sign-title {
+    display: block;
+    margin-top: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.32rem;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+  .donate-sign .sign-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.7rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 99px;
+    background: var(--color-on-gold);
+    color: var(--color-gold);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  /* Phones: no room to swing off a side edge, and a rotated board would sit
+     over the copy — tuck it into the bottom-right corner instead. */
+  @media (max-width: 767px) {
+    .donate-sign {
+      top: auto;
+      bottom: 0;
+      width: 10.5rem;
+      transform: translate(30%, 130%) rotate(-4deg);
+    }
+    .donate-sign.show,
+    .no-js .donate-sign {
+      transform: translate(14%, 18%) rotate(-4deg);
+    }
+    .donate-sign a { padding: 0.85rem 0.9rem 1.6rem; }
+    .donate-sign .sign-title { font-size: 1.05rem; }
+  }
+
   /* ---- Burger ----------------------------------------- */
   .burger-line {
     position: absolute;

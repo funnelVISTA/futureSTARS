@@ -56,6 +56,21 @@
   <div id="progress" class="h-full origin-left scale-x-0 bg-gradient-to-r from-gold via-gold-lite to-coral"></div>
 </div>
 
+<!-- Floating donate signpost — replaces the old header Donate CTA.
+     Swings in from the right edge once past the hero, and swings away again
+     while the donate section itself is on screen (no point nagging someone
+     who's already there). -->
+<div class="donate-sign" id="donate-sign">
+  <a href="#donate">
+    <span class="sign-eyebrow">Psst! Got a sec?</span>
+    <span class="sign-title">Back a<br />Future Star</span>
+    <span class="sign-pill">
+      Donate Now
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </span>
+  </a>
+</div>
+
 <!-- ============================== NAV ============================== -->
 <header id="nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
   <!-- z-50 keeps the bar (and the burger, which doubles as the close button)
@@ -75,9 +90,7 @@
         <a href="#home" class="navlink" data-nav>Home</a>
         <a href="#about" class="navlink" data-nav>About Us</a>
         <a href="#programs" class="navlink" data-nav>Programs</a>
-        <a href="#donate" class="navlink" data-nav>Donate</a>
         <a href="#involved" class="navlink" data-nav>Get Involved</a>
-        <a href="#contact" class="navlink" data-nav>Contact</a>
         <a href="#blogs" class="navlink" data-nav>Blogs</a>
       </div>
 
@@ -94,11 +107,6 @@
             <path d="M21 13.2A8.6 8.6 0 1 1 10.8 3a6.9 6.9 0 0 0 10.2 10.2z"/>
           </svg>
         </button>
-
-        <a href="#donate" class="btn btn-gold hidden !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex">
-          Donate Now
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
 
         <!-- lines are absolutely stacked on one centre so they can rotate into an
              X; the open/closed state is driven purely by aria-expanded in CSS -->
@@ -125,11 +133,8 @@
       <a href="#home"     class="mob-link" data-nav>Home</a>
       <a href="#about"    class="mob-link" data-nav>About Us</a>
       <a href="#programs" class="mob-link" data-nav>Programs</a>
-      <a href="#donate"   class="mob-link" data-nav>Donate</a>
       <a href="#involved" class="mob-link" data-nav>Get Involved</a>
-      <a href="#contact"  class="mob-link" data-nav>Contact</a>
       <a href="#blogs"    class="mob-link" data-nav>Blogs</a>
-      <a href="#donate" class="btn btn-gold mt-8 self-start">Donate Now</a>
     </div>
   </div>
 </header>
