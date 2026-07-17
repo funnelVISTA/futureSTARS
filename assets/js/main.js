@@ -564,7 +564,19 @@
   });
 
   /* ---------------------------------------------------- donate selectors */
+  // Interim behaviour: no checkout exists yet, so the amount is a suggestion
+  // for an e-Transfer rather than a charge. Phase 2 replaces this with Stripe.
   const amtInput = $('#donate-amount');
+  const summary = $('#donate-summary');
+
+  const syncDonate = () => {
+    if (!summary) return;
+    const amt = amtInput?.value;
+    summary.textContent = amt
+      ? `Send $${amt} from your banking app to the address above.`
+      : 'Add any amount in your banking app.';
+  };
+
   $$('[data-amt]').forEach((b) => {
     b.addEventListener('click', () => {
       $$('[data-amt]').forEach((o) => {
@@ -578,27 +590,29 @@
       syncDonate();
     });
   });
-
-  $$('[data-dtype]').forEach((b) => {
-    b.addEventListener('click', () => {
-      $$('[data-dtype]').forEach((o) => {
-        o.classList.remove('btn-gold'); o.classList.add('btn-ghost');
-        o.setAttribute('aria-pressed', 'false');
-      });
-      b.classList.remove('btn-ghost'); b.classList.add('btn-gold');
-      b.setAttribute('aria-pressed', 'true');
-      syncDonate();
-    });
-  });
-
-  function syncDonate() {
-    const amt = amtInput?.value;
-    const recurring = $('[data-dtype][aria-pressed="true"]')?.textContent.trim() === 'Recurring';
-    const t = $('#donate-go-text');
-    if (!t) return;
-    t.textContent = amt ? `Donate $${amt}${recurring ? ' / month' : ''}` : 'Donate Now';
-  }
   amtInput?.addEventListener('input', syncDonate);
+
+  const copyBtn = $('#donate-copy');
+  copyBtn?.addEventListener('click', async () => {
+    const address = $('#etransfer-address')?.textContent.trim();
+    const label = $('#donate-copy-text');
+    try {
+      await navigator.clipboard.writeText(address);
+      label.textContent = 'Copied ✓';
+      toast(`${address} copied — send your e-Transfer from your banking app.`);
+    } catch (e) {
+      // clipboard needs a secure context and permission; fall back to selecting
+      // the text so the donor can still copy it by hand rather than hitting a
+      // dead button.
+      const r = document.createRange();
+      r.selectNodeContents($('#etransfer-address'));
+      const sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(r);
+      label.textContent = 'Select and copy';
+      toast('Copy blocked by your browser — the address is selected above.');
+    }
+    setTimeout(() => { label.textContent = 'Copy e-Transfer address'; }, 2600);
+  });
 
   /* --------------------------------------------------------------- GSAP */
   if (window.gsap && !reduced) {

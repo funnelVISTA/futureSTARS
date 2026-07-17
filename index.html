@@ -410,20 +410,32 @@
             and essential needs such as food, clothing, and housing.
           </p>
 
+          <!-- Only the methods this site can actually complete are listed as
+               available. Card + recurring live on FSF's WordPress donation page
+               today; rather than send donors off to the old site, they're named
+               as pending until Stripe lands. Do NOT point the real domain here
+               until then — card giving would simply disappear. -->
           <ul class="mt-8 space-y-3" data-reveal style="--d:220ms">
-            <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>One-time and monthly recurring donations</li>
-            <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>Debit and credit card payments</li>
             <!-- The address is one long unbreakable token. Inline, it forced the
                  row wider than the card and squeezed "E-transfer send to:" into a
                  4-word stack. Own line + min-w-0 + break-all keeps it contained. -->
             <li class="flex items-start gap-3 text-sm text-cream/72">
               <span class="mt-1 shrink-0 text-gold" aria-hidden="true">★</span>
               <span class="min-w-0">
-                E-transfer send to:
+                Interac e-Transfer to:
                 <a href="mailto:donations@futurestarsfoundation.com" class="mt-0.5 block break-all font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">donations@futurestarsfoundation.com</a>
               </span>
             </li>
-            <li class="flex items-start gap-3 text-sm text-cream/72"><span class="mt-1 text-gold" aria-hidden="true">★</span>Direct Deposit</li>
+            <li class="flex items-start gap-3 text-sm text-cream/72">
+              <span class="mt-1 shrink-0 text-gold" aria-hidden="true">★</span>
+              <span class="min-w-0">Direct Deposit —
+                <a href="#contact" class="font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">contact us</a> for details
+              </span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-cream/55">
+              <span class="mt-1 shrink-0 text-cream/40" aria-hidden="true">☆</span>
+              <span class="min-w-0">Card and monthly recurring donations — coming to this page soon</span>
+            </li>
           </ul>
         </div>
 
@@ -432,17 +444,17 @@
              three amount columns would otherwise demand ~305px and push the card
              past the viewport edge (clipped, not scrollable, by overflow-x hidden).
              min-w-0 lets a grid item shrink below its content's intrinsic width. -->
+        <!-- Interim panel, until Stripe lands.
+             This previously offered One-Time/Recurring + an amount and then sent
+             the donor to the old WordPress site. Both are checkout concepts with
+             no checkout behind them here, so they'd be promising a flow that
+             doesn't exist. Until Stripe, the only thing this page can actually
+             complete is an e-Transfer — so the amount is framed as a suggestion
+             for that, and the CTA copies the address. Phase 2 restores the real
+             One-Time/Recurring + card checkout in place of this. -->
         <div class="min-w-0 rounded-3xl border border-cream/12 bg-ink/70 p-5 backdrop-blur-xl md:p-8" data-reveal style="--d:200ms">
           <fieldset>
-            <legend class="label !mb-3">Select Donation Type</legend>
-            <div class="grid grid-cols-2 gap-2.5" role="group">
-              <button type="button" class="dtype btn btn-gold min-w-0 !px-2 !py-3 !text-[0.85rem]" data-dtype aria-pressed="true">One-Time</button>
-              <button type="button" class="dtype btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.85rem]" data-dtype aria-pressed="false">Recurring</button>
-            </div>
-          </fieldset>
-
-          <fieldset class="mt-6">
-            <legend class="label !mb-3">Choose an amount (CAD)</legend>
+            <legend class="label !mb-3">Suggested amount (CAD)</legend>
             <div class="grid grid-cols-3 gap-2.5" role="group">
               <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="25" aria-pressed="false">$25</button>
               <button type="button" class="amt btn btn-ghost min-w-0 !px-2 !py-3 !text-[0.9rem]" data-amt="50" aria-pressed="false">$50</button>
@@ -457,16 +469,24 @@
             <label class="label" for="donate-amount">Amount</label>
             <div class="relative">
               <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-bold text-cream/60">$</span>
-              <input id="donate-amount" name="amount" type="number" min="1" step="1" inputmode="numeric" class="field !pl-8" placeholder="Enter an amount" />
+              <input id="donate-amount" name="amount" type="number" min="1" step="1" inputmode="numeric" class="field !pl-8" placeholder="Any amount" />
             </div>
           </div>
 
-          <a href="https://futurestarsfoundation.com/donation/" target="_blank" rel="noopener" class="btn btn-gold mt-6 w-full" id="donate-go">
-            <span id="donate-go-text">Donate Now</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
+          <div class="mt-6 rounded-2xl border border-gold/25 bg-gold/8 p-4">
+            <p class="label !mb-1.5">Send an Interac e-Transfer to</p>
+            <p class="break-all font-semibold text-gold-lite" id="etransfer-address">donations@futurestarsfoundation.com</p>
+            <p class="mt-2 text-[0.72rem] leading-relaxed text-cream/60" id="donate-summary">
+              Add any amount in your banking app.
+            </p>
+          </div>
+
+          <button type="button" class="btn btn-gold mt-4 w-full" id="donate-copy">
+            <span id="donate-copy-text">Copy e-Transfer address</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
           <p class="mt-3 text-center text-[0.72rem] leading-relaxed text-cream/60">
-            Opens FSF's secure donation page. Amounts are a guide — you can give any amount.
+            Prefer Direct Deposit? <a href="#contact" class="font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">Contact us</a> and we'll send the details.
           </p>
         </div>
       </div>
