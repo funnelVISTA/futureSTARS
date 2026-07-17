@@ -7,14 +7,12 @@
   "trailingSlash": false,
   "headers": [
     {
-      "//": "NEVER mark js/css immutable here: these filenames are stable, not content-hashed, so immutable freezes a returning visitor on an old build for a year. That shipped once and left everyone with JS predating the theme toggle — the button rendered, the CSS was fresh, and nothing wired the click. must-revalidate costs one cheap 304 per load and cannot go stale.",
       "source": "/assets/(js|css)/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {
-      "//": "Images are the bulk of the bytes and rarely change, but they DO get replaced in place — so cache hard, without immutable, to keep a swap from being invisible for a year.",
       "source": "/assets/img/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
