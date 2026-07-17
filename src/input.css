@@ -473,26 +473,25 @@
     letter-spacing: 0.03em;
   }
 
-  /* Phones.
-     The swing-from-the-edge trick needs a gutter to swing into and a phone
-     hasn't got one, so here it slides in from the right edge instead — same
-     direction of travel as the desktop swing, and driven by the same .show
-     class, so the appear/retract points are identical on both.
-     Anchored below the nav (which ends ~86px) rather than the bottom corner.
-     An earlier attempt let it hang off the corner by translate(14%,18%), which
-     clipped 24px right and 37px bottom and cut the text — hence fully inset. */
+  /* Phones mirror the desktop treatment exactly — same pivot, same 72deg/-16deg
+     swing, same 30% overhang so the board reads as emerging from the screen
+     edge with part of it still off. Only the anchor changes: it hangs below the
+     nav instead of being vertically centred, and is a little narrower.
+     (Earlier passes tried a fully-inset card sliding up from the bottom, and a
+     corner tab hanging off by translate(14%,18%) — the first lost the sign
+     look, the second clipped the text.) */
   @media (max-width: 767px) {
     .donate-sign {
-      top: 5.75rem;
+      top: 6.75rem;
       bottom: auto;
-      right: 0.75rem;
-      width: 9.75rem;
-      transform-origin: center;
-      transform: translateX(165%) rotate(-4deg);
+      right: 0;
+      width: 11rem;
+      transform-origin: right bottom;
+      transform: translate(42%, 0) rotate(72deg);
     }
     .donate-sign.show,
     .no-js .donate-sign {
-      transform: translateX(0) rotate(-4deg);
+      transform: translate(30%, 0) rotate(-16deg);
     }
     .donate-sign a { padding: 0.85rem 0.85rem 0.95rem; }
     .donate-sign a::before { top: 0.35rem; width: 0.45rem; height: 0.45rem; }
