@@ -474,25 +474,25 @@
   }
 
   /* Phones.
-     The swing-from-the-edge trick needs somewhere to swing to, and a phone has
-     no gutter. The first attempt anchored to the corner and let it hang off by
-     translate(14%,18%) — which clipped 24px off the right and 37px off the
-     bottom, cutting the text, and left it permanently half-visible so it never
-     looked like it reacted to scroll. So on small screens it stops pretending
-     to be a swinging sign: it sits fully on-screen inset from the corner and
-     slides up from below the fold, which reads clearly as a response to scroll. */
+     The swing-from-the-edge trick needs a gutter to swing into and a phone
+     hasn't got one, so here it slides in from the right edge instead — same
+     direction of travel as the desktop swing, and driven by the same .show
+     class, so the appear/retract points are identical on both.
+     Anchored below the nav (which ends ~86px) rather than the bottom corner.
+     An earlier attempt let it hang off the corner by translate(14%,18%), which
+     clipped 24px right and 37px bottom and cut the text — hence fully inset. */
   @media (max-width: 767px) {
     .donate-sign {
-      top: auto;
-      bottom: 1rem;
-      right: 1rem;
+      top: 5.75rem;
+      bottom: auto;
+      right: 0.75rem;
       width: 9.75rem;
       transform-origin: center;
-      transform: translateY(190%) rotate(-4deg);
+      transform: translateX(165%) rotate(-4deg);
     }
     .donate-sign.show,
     .no-js .donate-sign {
-      transform: translateY(0) rotate(-4deg);
+      transform: translateX(0) rotate(-4deg);
     }
     .donate-sign a { padding: 0.85rem 0.85rem 0.95rem; }
     .donate-sign a::before { top: 0.35rem; width: 0.45rem; height: 0.45rem; }
