@@ -125,9 +125,34 @@
     }
 
     btn.disabled = true; btn.classList.add('opacity-70');
-    note.textContent = 'Sending…';
+    note.textContent = 'Checking…';
     note.className = 'mt-4 text-sm text-cream/60';
 
+    const fail = (msg) => {
+      note.innerHTML = msg;
+      note.className = 'mt-4 text-sm text-coral';
+      btn.disabled = false; btn.classList.remove('opacity-70');
+    };
+
+    // Gate first: only allowlisted staff get a link requested at all, so an
+    // unknown address never triggers an email or creates an auth account.
+    try {
+      const r = await fetch('/api/admin-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const out = await r.json().catch(() => ({}));
+      if (!r.ok) return fail(esc(out.error || 'Could not verify that address.'));
+      if (!out.allowed) {
+        return fail('That email isn\'t set up for admin access. ' +
+                    'Please contact management to be added.');
+      }
+    } catch {
+      return fail('Could not reach the server. Please try again.');
+    }
+
+    note.textContent = 'Sending…';
     const { error } = await sb.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: location.origin + location.pathname }

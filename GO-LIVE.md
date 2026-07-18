@@ -26,7 +26,9 @@ rather than mentioned once and lost.
 |---|---|---|
 | 6 | **Notification email** — set `RESEND_API_KEY`, `NOTIFY_EMAIL`, `NOTIFY_FROM` | ✅ **Code done.** Branded HTML to staff (reply-to = submitter) + confirmation to the submitter. **Waiting only on a Resend account + keys.** Until then nobody is told when a registration arrives. |
 | 7 | **Spam protection** — Turnstile | ✅ **Code done, both halves.** Needs **two** values set together: `SITE_KEY` in `assets/js/turnstile.js` (public) **and** `TURNSTILE_SECRET_KEY` in Vercel. ⚠️ **Setting only the secret breaks every form** — the server would reject submissions with no token. Until both are set it no-ops safely. |
-| 8 | **Admin allowlist** | Decide which staff emails get `/admin`, then flip `is_admin` in `profiles` (SQL is at the bottom of `supabase/schema.sql`). |
+| 8 | **Admin allowlist** | ✅ **Built.** `admin_allowlist` table gates the magic link server-side; allowlisted users are auto-provisioned as admins on first sign-in. `mailmofixit@gmail.com` seeded. Add FSF staff via migration 003's snippet. |
+| 8b | **Disable public signups** in Supabase → Auth → Providers | Belt-and-braces behind the allowlist: stops any auth account being created by someone who bypasses the UI gate. |
+| 8c | **Point Supabase Auth at Resend SMTP** | Supabase's built-in auth email is rate-limited and often lands in spam. If a sign-in link doesn't arrive, staff can't log in. Reuse the Resend account from #6. |
 | 9 | **Sender domain DNS** (SPF/DKIM) | Notification email lands in spam without it. |
 | 10 | **Replace the 7 program images** | Current ones are 325×250 stock — soft on modern screens, and several show no youth of African descent, which misrepresents who FSF serves. |
 | 11 | **Analytics** — Plausible (~$9/mo, cookieless) | Chosen over GA4 to avoid forcing a cookie banner onto a youth-facing site. |
