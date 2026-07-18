@@ -240,6 +240,9 @@
         <input id="company_website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
       </div>
 
+      <!-- Turnstile renders here when a site key is configured; empty otherwise. -->
+      <div data-turnstile class="mt-6 empty:mt-0"></div>
+
       <p class="form-note mt-4 hidden text-sm" role="status" aria-live="polite"></p>
 
       <p class="mt-4 text-center text-[0.75rem] leading-relaxed text-cream/60">
@@ -309,6 +312,7 @@
   <p class="text-sm font-semibold" id="toast-text"></p>
 </div>
 
-<script src="assets/js/register.js?v=1" defer></script>
+<script src="assets/js/turnstile.js?v=1" defer></script>
+<script src="assets/js/register.js?v=2" defer></script>
 </body>
 </html>

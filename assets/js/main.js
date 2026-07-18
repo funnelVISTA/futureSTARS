@@ -321,6 +321,8 @@
       backdrop.classList.remove('opacity-0');
       panel.classList.remove('opacity-0', 'translate-y-6', 'scale-[0.98]');
     });
+    const injected = $('form', mBody);
+    if (injected) window.FSFTurnstile?.mount(injected);
     setTimeout(() => ($(FOCUSABLE, mBody) || $('#modal-close'))?.focus(), 60);
   }
 
@@ -444,6 +446,7 @@
         <div><label class="label" for="v-sigdate">Date <span class="req">*</span></label><input id="v-sigdate" name="sigdate" type="date" class="field" required /></div>
       </div>
 
+      <div data-turnstile class="mt-6 empty:mt-0"></div>
       <button type="submit" class="btn btn-gold mt-8 w-full">Sign up</button>
       <p class="form-note mt-4 hidden text-sm" role="status" aria-live="polite"></p>
     </form>`
@@ -512,6 +515,7 @@
         <span>By submitting this form, I agree that Future Stars Foundation may contact me to explore partnership opportunities. <span class="req">*</span></span>
       </label>
 
+      <div data-turnstile class="mt-6 empty:mt-0"></div>
       <button type="submit" class="btn btn-gold mt-8 w-full">Submit Partnership Inquiry</button>
       <p class="form-note mt-4 hidden text-sm" role="status" aria-live="polite"></p>
     </form>`
@@ -590,7 +594,10 @@
 
     // Collect every named control, including multi-value checkbox groups.
     const fd = new FormData(form);
-    const payload = { type: kind === 'partner' ? 'partnership' : kind };
+    const payload = {
+      type: kind === 'partner' ? 'partnership' : kind,
+      turnstile_token: window.FSFTurnstile?.token(form) || ''
+    };
     for (const [k, v] of fd.entries()) {
       if (v instanceof File) continue;                 // uploads aren't wired yet
       if (payload[k] === undefined) payload[k] = v;
@@ -622,6 +629,7 @@
         toast('Could not send — please try again.');
       })
       .finally(() => {
+        window.FSFTurnstile?.reset(form);   // tokens are single-use
         if (btn) { btn.disabled = false; btn.classList.remove('opacity-70'); btn.innerHTML = original; }
       });
   });
@@ -636,6 +644,9 @@
     const grp = el.closest('[data-req-group]');
     if (grp) $$('input[type="checkbox"]', grp).forEach((b) => b.closest('label')?.classList.remove('!border-coral'));
   });
+
+  // Contact form is present at load; the modal forms mount when opened.
+  window.FSFTurnstile?.mount($('#contact-form'));
 
   /* ---------------------------------------------------- donate selectors */
   // Interim behaviour: no checkout exists yet, so the amount is a suggestion

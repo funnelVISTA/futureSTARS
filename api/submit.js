@@ -68,26 +68,63 @@ async function passesSpamCheck(token, ip) {
   }
 }
 
-/** Best-effort notification. Never fails the submission. */
-async function notify(subject, lines) {
+/** Send one email via Resend. Never throws — email must not fail a submission. */
+async function sendMail({ to, subject, html, replyTo }) {
   const key = process.env.RESEND_API_KEY;
-  const to = process.env.NOTIFY_EMAIL;
   if (!key || !to) return;
   try {
-    await fetch('https://api.resend.com/emails', {
+    const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: process.env.NOTIFY_FROM || 'FSF Website <onboarding@resend.dev>',
         to: [to],
         subject,
-        text: lines.filter(Boolean).join('\n')
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {})
       })
     });
+    if (!r.ok) console.error('resend rejected:', r.status, await r.text());
   } catch (e) {
-    console.error('notify failed:', e.message);
+    console.error('sendMail failed:', e.message);
   }
 }
+
+const esc = (v) => String(v ?? '')
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** Branded shell so staff mail doesn't look like a raw dump. */
+const wrap = (heading, rowsHtml, footer = '') => `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f5f0;padding:24px">
+    <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e7e2d4">
+      <div style="background:#0b0b0f;padding:18px 22px">
+        <span style="color:#e3a812;font-weight:800;letter-spacing:.5px">FUTURE STARS FOUNDATION</span>
+      </div>
+      <div style="padding:22px">
+        <h2 style="margin:0 0 14px;font-size:18px;color:#17161c">${heading}</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;color:#17161c">${rowsHtml}</table>
+        ${footer}
+      </div>
+    </div>
+  </div>`;
+
+const row2 = (label, value) => value
+  ? `<tr>
+       <td style="padding:6px 10px 6px 0;color:#6b6a63;white-space:nowrap;vertical-align:top">${esc(label)}</td>
+       <td style="padding:6px 0;vertical-align:top"><strong>${esc(value)}</strong></td>
+     </tr>`
+  : '';
+
+/** Confirmation to the person who submitted — so they know it landed. */
+const confirmation = (name, body) => wrap(
+  `Thanks, ${esc(name.split(' ')[0] || 'there')} \u2014 we've got it.`,
+  '',
+  `<div style="font-size:14px;line-height:1.6;color:#17161c">${body}</div>
+   <p style="margin-top:18px;font-size:13px;color:#6b6a63">
+     Questions? Reply to this email or call +1 (778) 707-1921.<br/>
+     Future Stars Foundation \u00b7 9835 King George Blvd., Surrey BC
+   </p>`
+);
 
 /* ------------------------------------------------------------- validators */
 /** Each returns { error } or { row, children?, subscribe?, summary } */
@@ -153,12 +190,33 @@ const handlers = {
       },
       children,
       subscribe: bool(b.consent_newsletter) ? required.guardian_email : null,
-      summary: [
-        `New registration from ${required.guardian_name} <${required.guardian_email}>`,
-        `Phone: ${required.guardian_phone}`,
-        '',
-        ...children.map((c, i) => `${i + 1}. ${c.child_name} — ${c.program} (DOB ${c.child_dob})`)
-      ]
+      subject: `New registration — ${required.guardian_name} (${children.length} ${children.length === 1 ? 'child' : 'children'})`,
+      replyTo: required.guardian_email,
+      staffHtml: wrap('New program registration',
+        row2('Guardian', required.guardian_name) +
+        row2('Relationship', required.guardian_relationship) +
+        row2('Email', required.guardian_email) +
+        row2('Phone', required.guardian_phone) +
+        row2('Address', `${required.guardian_street}, ${required.guardian_city} ${required.guardian_postal}`) +
+        row2('Emergency', `${required.emergency_name} — ${required.emergency_phone}`),
+        `<h3 style="margin:18px 0 8px;font-size:15px;color:#17161c">Participants</h3>` +
+        children.map((c) => `
+          <div style="border:1px solid #e7e2d4;border-radius:8px;padding:12px;margin-bottom:8px">
+            <strong style="font-size:14px">${esc(c.child_name)}</strong>
+            <div style="font-size:13px;color:#6b6a63;margin-top:4px">
+              ${esc(c.program)}<br/>DOB ${esc(c.child_dob)}
+              ${c.school ? `<br/>School: ${esc(c.school)}` : ''}
+              ${c.medical ? `<br/><span style="color:#c0392f">Medical/allergies: ${esc(c.medical)}</span>` : ''}
+              <br/>Photo consent: ${c.photo_consent ? 'yes' : 'no'}
+            </div>
+          </div>`).join('')),
+      confirmTo: required.guardian_email,
+      confirmHtml: confirmation(required.guardian_name,
+        `<p>We've received your registration for
+         <strong>${children.map((c) => esc(c.child_name)).join(', ')}</strong>.</p>
+         <p>A team member will be in touch to confirm
+         ${children.length === 1 ? "your child's place" : 'their places'} and let you know
+         about any program fee.</p>`)
     };
   },
 
@@ -175,7 +233,15 @@ const handlers = {
     if (!isEmail(row.email)) return { error: 'Invalid email address' };
     return {
       table: 'contacts', row,
-      summary: [`New message from ${row.first_name} ${row.last_name} <${row.email}>`, '', row.message]
+      subject: `New message — ${row.first_name} ${row.last_name}`,
+      replyTo: row.email,
+      staffHtml: wrap('New contact message',
+        row2('From', `${row.first_name} ${row.last_name}`) + row2('Email', row.email),
+        `<div style="margin-top:14px;padding:12px;background:#faf7ef;border-radius:8px;
+                     font-size:14px;line-height:1.6;white-space:pre-wrap">${esc(row.message)}</div>`),
+      confirmTo: row.email,
+      confirmHtml: confirmation(row.first_name,
+        `<p>Thanks for getting in touch — we've received your message and will reply soon.</p>`)
     };
   },
 
@@ -207,12 +273,24 @@ const handlers = {
     if (!row.policy_agreed || !row.consent) return { error: 'Required agreements must be accepted' };
     return {
       table: 'volunteers', row,
-      summary: [
-        `New volunteer application: ${row.name} <${row.email}>`,
-        `Phone: ${row.phone}`,
-        `Criminal record check: ${row.criminal_record_check || 'not stated'}`,
-        `Interests: ${row.interests.join(', ') || '—'}`
-      ]
+      subject: `New volunteer application — ${row.name}`,
+      replyTo: row.email,
+      staffHtml: wrap('New volunteer application',
+        row2('Name', row.name) + row2('Email', row.email) + row2('Phone', row.phone) +
+        row2('Criminal record check', row.criminal_record_check || 'not stated') +
+        row2('Youth protection policy', row.policy_agreed ? 'agreed' : 'NOT agreed') +
+        row2('Interests', row.interests.join(', ')) +
+        row2('Availability', row.availability.join(', ')),
+        row.criminal_record_check === 'No'
+          ? `<p style="margin-top:14px;padding:10px;background:#fdeceb;border-radius:8px;
+                       font-size:13px;color:#c0392f">
+               No criminal record check on file — screen before any contact with youth.
+             </p>` : ''),
+      confirmTo: row.email,
+      confirmHtml: confirmation(row.name,
+        `<p>Thanks for offering to volunteer with Future Stars Foundation.</p>
+         <p>Our team will review your application and be in touch about next steps,
+            including any screening required before working with youth.</p>`)
     };
   },
 
@@ -239,11 +317,22 @@ const handlers = {
     if (!row.consent) return { error: 'Consent is required' };
     return {
       table: 'partnerships', row,
-      summary: [
-        `New partnership enquiry: ${row.org_name}`,
-        `Contact: ${row.contact_person} <${row.email}>`,
-        `Type: ${row.partnership_type || '—'}`
-      ]
+      subject: `New partnership enquiry — ${row.org_name}`,
+      replyTo: row.email,
+      staffHtml: wrap('New partnership enquiry',
+        row2('Organization', row.org_name) + row2('Contact', row.contact_person) +
+        row2('Title', row.title) + row2('Email', row.email) + row2('Phone', row.phone) +
+        row2('Type', row.partnership_type) + row2('Focus area', row.focus_area) +
+        row2('Worked with youth before', row.prior_partnership) +
+        row2('Heard about us via', row.heard_about),
+        row.description
+          ? `<div style="margin-top:14px;padding:12px;background:#faf7ef;border-radius:8px;
+                         font-size:14px;line-height:1.6;white-space:pre-wrap">${esc(row.description)}</div>` : ''),
+      confirmTo: row.email,
+      confirmHtml: confirmation(row.contact_person,
+        `<p>Thanks for your interest in partnering with Future Stars Foundation.</p>
+         <p>We've received your enquiry on behalf of <strong>${esc(row.org_name)}</strong>
+            and will be in touch to explore how we can work together.</p>`)
     };
   }
 };
@@ -325,7 +414,21 @@ export default async function handler(req, res) {
       );
     }
 
-    await notify(`FSF website — ${body.type}`, result.summary);
+    // Fire both emails in parallel. They're deliberately awaited so the
+    // serverless function doesn't exit before they're sent, but sendMail never
+    // throws — a mail failure must not turn a saved submission into an error.
+    await Promise.all([
+      sendMail({
+        to: process.env.NOTIFY_EMAIL,
+        subject: result.subject || `FSF website — ${body.type}`,
+        html: result.staffHtml,
+        replyTo: result.replyTo            // staff can reply straight to the person
+      }),
+      result.confirmTo
+        ? sendMail({ to: result.confirmTo, subject: 'We received your submission — Future Stars Foundation', html: result.confirmHtml })
+        : null
+    ]);
+
     return res.status(200).json({ ok: true, id: data.id });
   } catch (e) {
     // Log the detail server-side; return something a visitor can act on.

@@ -262,6 +262,7 @@
   const collect = () => ({
     type: 'registration',
     company_website: $('[name="company_website"]')?.value || '',   // honeypot
+    turnstile_token: window.FSFTurnstile?.token(form) || '',
     guardian_name: $('#g-name').value.trim(),
     guardian_relationship: $('#g-rel').value,
     guardian_email: $('#g-email').value.trim(),
@@ -284,6 +285,8 @@
       photo_consent: $('[name="child_photo_consent"]', b).checked
     }))
   });
+
+  window.FSFTurnstile?.mount(form);
 
   const submitBtn = $('button[type="submit"]', form);
   let sending = false;
@@ -330,6 +333,7 @@
       note(err.message || "Sorry — we couldn't submit that. Please try again.", false);
       toast('Could not submit — please try again.');
     } finally {
+      window.FSFTurnstile?.reset(form);   // tokens are single-use
       sending = false;
       submitBtn.disabled = false;
       submitBtn.classList.remove('opacity-70');
