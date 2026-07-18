@@ -1,5 +1,9 @@
 # Future Stars Foundation — website redesign
 
+> **Before launch, read [`GO-LIVE.md`](GO-LIVE.md)** — the running checklist of
+> everything outstanding: blockers, items needed before real traffic, and open
+> client decisions.
+
 A premium, single-page, highly interactive rebuild of
 [futurestarsfoundation.com](https://futurestarsfoundation.com/).
 
