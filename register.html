@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Register for a Program — Future Stars Foundation</title>
+<meta name="description" content="Register your child for a Future Stars Foundation program — sports, education, mentorship, and youth development in Surrey BC." />
+<meta name="theme-color" content="#0b0b0f" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Future Stars Foundation" />
+<meta property="og:url" content="https://futurestarsfoundation.vercel.app/register" />
+<meta property="og:title" content="Register for a Program — Future Stars Foundation" />
+<meta property="og:description" content="Sign your child up for a Future Stars Foundation program — sports, education, mentorship and more." />
+<meta property="og:image" content="https://futurestarsfoundation.vercel.app/assets/img/og-card.jpg" />
+
+<link rel="icon" href="assets/img/cropped-favicon2.png" />
+<link rel="apple-touch-icon" href="assets/img/cropped-favicon2.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/styles.css?v=2" />
+<script>
+// Runs before first paint so a light-theme visitor never sees a dark flash.
+(function () {
+  document.documentElement.classList.remove('no-js');
+  try {
+    var t = localStorage.getItem('fsf-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { /* private mode — fall through to the dark default */ }
+})();
+</script>
+</head>
+
+<body class="noise">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-gold focus:px-5 focus:py-3 focus:font-bold focus:text-on-gold">Skip to content</a>
+
+<!-- ============================== NAV ============================== -->
+<!-- Links point back to index.html sections since this is a separate page.
+     No donate signpost here — it shouldn't pull people out of a form. -->
+<header id="nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
+  <div class="container-x relative z-50">
+    <nav id="navbar" class="mt-4 flex items-center justify-between rounded-2xl border border-cream/10 bg-ink/60 px-4 py-3 backdrop-blur-xl transition-all duration-500 md:px-6" aria-label="Main">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/img/headerlogo.png" alt="Future Stars Foundation" class="navlogo logo-dark h-11 w-auto transition-all duration-500" width="226" height="164" />
+        <img src="assets/img/headerlogo-light.png" alt="Future Stars Foundation" class="navlogo logo-light h-11 w-auto transition-all duration-500" width="226" height="164" />
+        <span class="sr-only">Future Stars Foundation — home</span>
+      </a>
+
+      <div class="hidden items-center gap-7 lg:flex">
+        <a href="index.html" class="navlink">Home</a>
+        <a href="index.html#about" class="navlink">About Us</a>
+        <a href="index.html#programs" class="navlink">Programs</a>
+        <a href="index.html#involved" class="navlink">Get Involved</a>
+        <a href="index.html#blogs" class="navlink">Blogs</a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="theme-toggle" type="button"
+                class="grid h-11 w-11 place-items-center rounded-xl border border-cream/15 text-cream/75 transition-all hover:-translate-y-0.5 hover:border-gold hover:text-gold"
+                aria-label="Switch to light theme">
+          <svg class="theme-icon-sun h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"/>
+            <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>
+          </svg>
+          <svg class="theme-icon-moon h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 13.2A8.6 8.6 0 1 1 10.8 3a6.9 6.9 0 0 0 10.2 10.2z"/>
+          </svg>
+        </button>
+
+        <button id="burger" class="burger relative z-10 grid h-11 w-11 place-items-center rounded-xl border border-cream/15 lg:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <div id="mobilemenu" class="pointer-events-none invisible fixed inset-0 z-40 translate-y-[-100%] overflow-y-auto overscroll-contain bg-ink/95 backdrop-blur-2xl transition-[transform,visibility] duration-500 lg:hidden" style="transition-timing-function: var(--ease-out-expo)">
+    <div class="container-x flex min-h-full flex-col justify-center gap-1 py-24">
+      <a href="index.html"          class="mob-link">Home</a>
+      <a href="index.html#about"    class="mob-link">About Us</a>
+      <a href="index.html#programs" class="mob-link">Programs</a>
+      <a href="index.html#involved" class="mob-link">Get Involved</a>
+      <a href="index.html#blogs"    class="mob-link">Blogs</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================== PAGE HEADER ============================== -->
+<section class="relative overflow-hidden pt-36 pb-10 md:pt-44 md:pb-14">
+  <div class="pointer-events-none absolute -left-40 top-0 h-[34rem] w-[34rem] rounded-full bg-gold/12 blur-[130px]" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute -right-32 top-1/3 h-[26rem] w-[26rem] rounded-full bg-teal/10 blur-[130px]" aria-hidden="true"></div>
+
+  <svg class="pointer-events-none absolute right-[8%] top-[22%] hidden h-12 w-12 text-gold/70 anim-float lg:block" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .8l3.1 6.9 7.5.8-5.6 5 1.6 7.4L12 17.2 5.4 20.9 7 13.5 1.4 8.5l7.5-.8z"/></svg>
+
+  <div class="container-x relative">
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-6" data-reveal>Registration</p>
+      <h1 class="text-[clamp(2.2rem,6vw,4rem)]" data-reveal style="--d:80ms">
+        Register for a <span class="gold-text">Program</span>
+      </h1>
+      <p class="mt-6 text-pretty leading-relaxed text-cream/70 md:text-lg" data-reveal style="--d:150ms">
+        Sign your child up for any of our seven programs — sports, education, mentorship, and more.
+        A parent or guardian completes this form. It takes about five minutes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FORM ============================== -->
+<section class="relative pb-24 md:pb-32">
+  <div class="container-x">
+    <form id="register-form" class="card mx-auto max-w-4xl p-6 md:p-10" novalidate data-reveal>
+
+      <!-- ---------- 1. GUARDIAN ---------- -->
+      <div class="flex items-center gap-3">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold text-sm font-extrabold text-on-gold">1</span>
+        <h2 class="text-xl md:text-2xl">Parent or guardian</h2>
+      </div>
+      <p class="mt-2 text-sm text-cream/60">The adult responsible for the participant — this is who we'll contact.</p>
+
+      <div class="mt-6 grid gap-5 sm:grid-cols-2">
+        <div>
+          <label class="label" for="g-name">Full name <span class="req">*</span></label>
+          <input id="g-name" name="guardian_name" class="field" required autocomplete="name" />
+        </div>
+        <div>
+          <label class="label" for="g-rel">Relationship to participant <span class="req">*</span></label>
+          <select id="g-rel" name="guardian_relationship" class="field" required>
+            <option value="">Please select</option>
+            <option>Parent</option>
+            <option>Legal guardian</option>
+            <option>Grandparent</option>
+            <option>Other family member</option>
+            <option>Caseworker / support worker</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="g-email">Email address <span class="req">*</span></label>
+          <input id="g-email" name="guardian_email" type="email" class="field" required autocomplete="email" />
+        </div>
+        <div>
+          <label class="label" for="g-phone">Phone number <span class="req">*</span></label>
+          <input id="g-phone" name="guardian_phone" type="tel" class="field" required autocomplete="tel" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="label" for="g-street">Street address <span class="req">*</span></label>
+          <input id="g-street" name="guardian_street" class="field" required autocomplete="street-address" />
+        </div>
+        <div>
+          <label class="label" for="g-city">City <span class="req">*</span></label>
+          <input id="g-city" name="guardian_city" class="field" required autocomplete="address-level2" />
+        </div>
+        <div>
+          <label class="label" for="g-postal">Postal code <span class="req">*</span></label>
+          <input id="g-postal" name="guardian_postal" class="field" required autocomplete="postal-code" />
+        </div>
+      </div>
+
+      <!-- ---------- 2. PARTICIPANTS ---------- -->
+      <div class="mt-12 flex items-center gap-3">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold text-sm font-extrabold text-on-gold">2</span>
+        <h2 class="text-xl md:text-2xl">Participant details</h2>
+      </div>
+      <p class="mt-2 text-sm text-cream/60">
+        Programs are open to ages <span data-age-range>3–19</span>. Registering more than one child?
+        Add them all here — you only fill in your own details once.
+      </p>
+
+      <div id="children"></div>
+
+      <button type="button" id="add-child"
+              class="mt-4 inline-flex items-center gap-2 rounded-xl border border-dashed border-cream/25 px-4 py-3 text-sm font-bold text-cream/75 transition-all hover:border-gold hover:text-gold">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Add another child
+      </button>
+
+      <!-- ---------- 3. EMERGENCY CONTACT ---------- -->
+      <div class="mt-12 flex items-center gap-3">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold text-sm font-extrabold text-on-gold">3</span>
+        <h2 class="text-xl md:text-2xl">Emergency contact</h2>
+      </div>
+      <p class="mt-2 text-sm text-cream/60">Someone we can reach if we can't reach you.</p>
+
+      <div class="mt-6 grid gap-5 sm:grid-cols-3">
+        <div>
+          <label class="label" for="e-name">Name <span class="req">*</span></label>
+          <input id="e-name" name="emergency_name" class="field" required />
+        </div>
+        <div>
+          <label class="label" for="e-phone">Phone <span class="req">*</span></label>
+          <input id="e-phone" name="emergency_phone" type="tel" class="field" required />
+        </div>
+        <div>
+          <label class="label" for="e-rel">Relationship</label>
+          <input id="e-rel" name="emergency_relationship" class="field" />
+        </div>
+      </div>
+
+      <!-- ---------- 4. CONSENT ---------- -->
+      <div class="mt-12 flex items-center gap-3">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold text-sm font-extrabold text-on-gold">4</span>
+        <h2 class="text-xl md:text-2xl">Consent</h2>
+      </div>
+
+      <div class="mt-6 space-y-3">
+        <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-cream/12 p-4 text-sm leading-relaxed transition-colors hover:border-gold/50">
+          <input type="checkbox" name="consent_policy" class="mt-0.5 h-4 w-4 shrink-0 accent-[#e3a812]" required />
+          <span>I agree to Future Stars Foundation's <strong class="text-gold-lite">Child &amp; Youth Protection Policy</strong>, and confirm I am the parent or legal guardian of the participant(s) named above. <span class="req">*</span></span>
+        </label>
+
+        <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-cream/12 p-4 text-sm leading-relaxed transition-colors hover:border-gold/50">
+          <input type="checkbox" name="consent_accurate" class="mt-0.5 h-4 w-4 shrink-0 accent-[#e3a812]" required />
+          <span>I certify the information provided is accurate, and consent to FSF contacting me about this registration. <span class="req">*</span></span>
+        </label>
+
+        <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-cream/12 p-4 text-sm leading-relaxed transition-colors hover:border-gold/50">
+          <input type="checkbox" name="consent_newsletter" class="mt-0.5 h-4 w-4 shrink-0 accent-[#e3a812]" />
+          <span>Keep me updated on FSF news, events and opportunities. <span class="text-cream/50">(Optional — you can unsubscribe any time.)</span></span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-gold mt-9 w-full">
+        Submit registration
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+
+      <p class="form-note mt-4 hidden text-sm" role="status" aria-live="polite"></p>
+
+      <p class="mt-4 text-center text-[0.75rem] leading-relaxed text-cream/60">
+        A team member will confirm your child's place and let you know about any program fee.
+        Questions? <a href="index.html#contact" class="font-semibold text-gold-lite underline decoration-gold/40 underline-offset-4 hover:decoration-gold">Get in touch</a>.
+      </p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="relative overflow-hidden border-t border-cream/10 bg-ink-2/50 pt-16 pb-8">
+  <div class="container-x">
+    <div class="grid gap-10 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <img src="assets/img/headerlogo.png" alt="Future Stars Foundation" class="logo-dark h-14 w-auto" width="226" height="164" loading="lazy" />
+        <img src="assets/img/headerlogo-light.png" alt="Future Stars Foundation" class="logo-light h-14 w-auto" width="226" height="164" loading="lazy" />
+        <p class="mt-5 max-w-sm text-pretty text-sm leading-relaxed text-cream/60">
+          A youth-focused, community-driven non-profit empowering the next generation through sports,
+          education, mentorship, leadership development, and essential support services.
+        </p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="https://www.facebook.com/profile.php?id=61581628381135" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/futurestarsfoundation/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-xl border border-cream/12 transition-all hover:-translate-y-1 hover:border-gold hover:text-gold" aria-label="FSF on Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <nav aria-label="Footer">
+        <h4 class="text-[0.72rem] font-extrabold uppercase tracking-[0.18em] text-gold">Navigation</h4>
+        <ul class="mt-5 space-y-2.5 text-sm text-cream/62">
+          <li><a href="index.html#about" class="transition-colors hover:text-gold">About Us</a></li>
+          <li><a href="index.html#programs" class="transition-colors hover:text-gold">Programs</a></li>
+          <li><a href="index.html#donate" class="transition-colors hover:text-gold">Donate</a></li>
+          <li><a href="index.html#contact" class="transition-colors hover:text-gold">Contact</a></li>
+          <li><a href="index.html#involved" class="transition-colors hover:text-gold">Get Involved</a></li>
+          <li><a href="index.html#blogs" class="transition-colors hover:text-gold">Blogs</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h4 class="text-[0.72rem] font-extrabold uppercase tracking-[0.18em] text-gold">Contact Us</h4>
+        <ul class="mt-5 space-y-2.5 text-sm text-cream/62">
+          <li><a href="tel:+17787071921" class="transition-colors hover:text-gold">+1 (778) 707-1921</a></li>
+          <li><a href="mailto:info@futurestarsfoundation.com" class="break-all transition-colors hover:text-gold">info@futurestarsfoundation.com</a></li>
+          <li class="leading-relaxed">9835 King George Blvd., Surrey BC, Canada V3T 5H6</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-cream/10 pt-6 sm:flex-row">
+      <p class="text-xs text-cream/60">© 2025 Future Stars Foundation. All Rights Reserved.</p>
+      <p class="text-xs text-cream/60">
+        Web design by <span class="font-semibold text-gold">Funnel Vista Marketing</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- toast -->
+<div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[90] w-[min(92vw,26rem)] -translate-x-1/2 translate-y-24 rounded-2xl border border-gold/30 bg-ink-2/95 px-5 py-4 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-400" role="status" aria-live="polite" style="transition-timing-function: var(--ease-out-expo)">
+  <p class="text-sm font-semibold" id="toast-text"></p>
+</div>
+
+<script src="assets/js/register.js?v=1" defer></script>
+</body>
+</html>

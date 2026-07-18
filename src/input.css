@@ -2,7 +2,9 @@
 
 /* Class names also live inside main.js template strings — scan both. */
 @source "../index.html";
+@source "../register.html";
 @source "../assets/js/main.js";
+@source "../assets/js/register.js";
 
 /* ============================================================
    FUTURE STARS FOUNDATION — design tokens
