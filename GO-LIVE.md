@@ -59,6 +59,44 @@ rather than mentioned once and lost.
 | 26 | File upload for the partnership form (field exists, not wired) |
 | 27 | Contact link is missing from the mobile menu — currently reachable only by scrolling or via the footer |
 
+## 🔵 Admin dashboard backlog (menu — client to choose, nothing agreed yet)
+
+The dashboard today is a **viewer**: it reads and exports. The main upgrade
+available is making it a **working tool** — staff acting on records rather than
+just reading them. `status` and `staff_notes` columns already exist and are
+unused by the UI.
+
+**Recommended first batch** (28, 29, 30, 34 — all low effort, two are safeguarding wins):
+
+| # | Item | Value | Effort |
+|---|---|---|---|
+| 28 | **Photo consent report** — one list of who may *not* be photographed. Consent is captured per child but buried; staff need it before posting event photos. Highest-value item here. | High | Low |
+| 29 | **Medical & allergy sheet, per program** — printable, for coaches on the field. Data already collected, just not in usable form. | High | Low |
+| 30 | **Registration workflow** — confirm / waitlist / cancel in one click. Schema supports it; UI only displays it. | High | Low |
+| 31 | **Auto-generated impact numbers** — children served, by program, by age, over time. Fills the biggest gap on the public site (no published stats; none invented). Feeds donor + funder conversations. | High | Medium |
+| 32 | **Volunteer screening tracker** — staff-verified flag + CRC **expiry dates**. Currently only shows the applicant's self-reported answer. Highest-stakes record held. | High | Medium |
+| 33 | **Attendance check-in** per session — safeguarding + funder reporting. *Hold until FSF confirms they'd use it.* | High | Medium |
+| 34 | **Staff notes** on any record — fields already exist. | Medium | Low |
+| 35 | **Manage admins in-app** — add/remove allowlist without SQL. | Medium | Low |
+| 36 | **Duplicate detection** — same child registered twice. | Medium | Low |
+| 37 | **Charts** — registrations over time / by program. Good for board meetings. | Medium | Low |
+| 38 | **Bulk email a program's parents** ("practice cancelled"). *Hold until FSF confirms they'd use it.* | High | Medium |
+| 39 | **Capacity + auto-waitlist** per program. Duplicate of #24 — pending FSF's answer on caps. | High | Medium |
+| 40 | **Funder / grant export** — demographic breakdowns for applications. | High at grant time | Medium |
+| 41 | **Retention purge tool** with preview of what will be deleted. Pairs with #23. | Medium | Medium |
+| 42 | **Audit log** — who viewed/changed what. Genuinely relevant for children's data. | Medium | Medium |
+| 43 | Payment status, outstanding fees, donation metrics | High | **Blocked on Phase 2 (Stripe)** |
+
+**On the Messages tab (keep, don't invest):** it surfaces the `contacts` table,
+and right now it's the *only* way to see a contact submission because email
+notifications aren't configured yet (#6). Once they are, staff will reply from
+their inbox and this tab drops in value — but keep it: inboxes are personal and
+get deleted or leave with the person, the database is the durable shared record.
+
+**Already scoped but genuinely blocked, not forgotten:** donation metrics
+(Phase 2), traffic/conversion funnel (Plausible not set up), program capacity
+(FSF hasn't answered caps).
+
 ---
 
 ## ⚠️ Gotchas to remember
