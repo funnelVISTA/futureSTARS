@@ -233,6 +233,13 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
 
+      <!-- Honeypot: hidden from people, irresistible to bots. Server accepts
+           and discards anything that fills it. -->
+      <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+        <label for="company_website">Company website</label>
+        <input id="company_website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
       <p class="form-note mt-4 hidden text-sm" role="status" aria-live="polite"></p>
 
       <p class="mt-4 text-center text-[0.75rem] leading-relaxed text-cream/60">

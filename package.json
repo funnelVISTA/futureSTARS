@@ -4,13 +4,18 @@
   "description": "Future Stars Foundation \u2014 single-page site",
   "private": true,
   "scripts": {
-    "check": "node --check assets/js/main.js && node --check assets/js/register.js && node scripts/smoke.mjs && node scripts/check-config.mjs",
+    "check": "node --check assets/js/main.js && node --check assets/js/register.js && node --check api/submit.js && node scripts/smoke.mjs && node scripts/check-config.mjs",
     "build": "npm run check && tailwindcss -i ./src/input.css -o ./assets/css/styles.css --minify",
     "dev": "tailwindcss -i ./src/input.css -o ./assets/css/styles.css --watch",
-    "serve": "python3 -m http.server 4173"
+    "serve": "python3 -m http.server 4173",
+    "test:api": "node scripts/api-test.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.14",
     "tailwindcss": "^4.1.14"
+  },
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.7"
   }
 }

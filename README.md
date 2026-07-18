@@ -135,3 +135,50 @@ Three things worth a decision before this goes live:
 
 Program card images are the 325×250 versions the live site serves — that's the largest
 available. Higher-resolution originals would noticeably sharpen the Programs grid.
+
+---
+
+## Backend (Phase 1)
+
+Forms POST to `/api/submit`, a Vercel function that validates the payload,
+checks Turnstile, writes to Supabase with the service-role key, and emails a
+notification. Nothing writes to the database from the browser.
+
+### One-time setup
+
+1. **Create the Supabase project — region `ca-central-1`.**
+   This stores Canadian children's personal data and **the region cannot be
+   changed after creation.**
+2. **Run [`supabase/schema.sql`](supabase/schema.sql)** in the Supabase SQL
+   Editor. It creates the tables, enables RLS on all of them, and adds
+   admin-only read policies.
+3. **Set environment variables** in Vercel → Settings → Environment Variables:
+
+   | Variable | Required | Notes |
+   |---|---|---|
+   | `SUPABASE_URL` | yes | Project URL |
+   | `SUPABASE_SERVICE_ROLE_KEY` | yes | **Server-only.** Never expose to the browser |
+   | `TURNSTILE_SECRET_KEY` | no | Spam check runs only if set |
+   | `RESEND_API_KEY` | no | Notification email only if set |
+   | `NOTIFY_EMAIL` | no | Where notifications go |
+   | `NOTIFY_FROM` | no | Verified sender address |
+
+Until `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` are set, `/api/submit`
+returns a 503 telling visitors to email FSF instead — it degrades honestly
+rather than appearing to succeed.
+
+### Testing
+
+```bash
+npm run test:api    # 13 validation cases — no database required
+```
+
+Age eligibility is enforced **server-side as well as in the browser**; the
+client check is a convenience, not a guard. Both read the same `MIN_AGE` /
+`MAX_AGE` constants (currently 3–19).
+
+### Retention
+
+Registrations, participants, contacts and subscribers are to be purged at
+**12 months** (FSF's instruction). ⚠️ Payment records — once Stripe lands in
+Phase 2 — **must not** follow that rule: CRA generally requires ~6 years.

@@ -588,8 +588,42 @@
                 : kind === 'partner'   ? 'partnership inquiry'
                 : 'message';
 
-    note(form, `This demo build has no server connected, so your ${label} was not sent. Hook this form up to FSF's form handler (or email info@futurestarsfoundation.com) to go live.`, true);
-    toast('Validated ✓ — but no backend is connected yet.');
+    // Collect every named control, including multi-value checkbox groups.
+    const fd = new FormData(form);
+    const payload = { type: kind === 'partner' ? 'partnership' : kind };
+    for (const [k, v] of fd.entries()) {
+      if (v instanceof File) continue;                 // uploads aren't wired yet
+      if (payload[k] === undefined) payload[k] = v;
+      else payload[k] = [].concat(payload[k], v);      // interests, availability
+    }
+    ['interests', 'availability'].forEach((k) => {
+      if (payload[k] !== undefined) payload[k] = [].concat(payload[k]);
+    });
+
+    const btn = $('button[type="submit"]', form);
+    const original = btn?.innerHTML;
+    if (btn) { btn.disabled = true; btn.classList.add('opacity-70'); btn.textContent = 'Sending…'; }
+    note(form, 'Sending…', true);
+
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(async (r) => {
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok || !data.ok) throw new Error(data.error || 'Something went wrong.');
+        form.reset();
+        note(form, `Thank you — your ${label} has been received. We'll be in touch soon.`, true);
+        toast('Received — thank you!');
+      })
+      .catch((err) => {
+        note(form, err.message || "Sorry — we couldn't send that. Please try again.", false);
+        toast('Could not send — please try again.');
+      })
+      .finally(() => {
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-70'); btn.innerHTML = original; }
+      });
   });
 
   // clear the error ring as the user fixes a field

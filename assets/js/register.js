@@ -258,10 +258,41 @@
     n.classList.toggle('text-coral', !good);
   };
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const { ok, firstBad } = validate();
+  /** Shape the form into the payload /api/submit expects. */
+  const collect = () => ({
+    type: 'registration',
+    company_website: $('[name="company_website"]')?.value || '',   // honeypot
+    guardian_name: $('#g-name').value.trim(),
+    guardian_relationship: $('#g-rel').value,
+    guardian_email: $('#g-email').value.trim(),
+    guardian_phone: $('#g-phone').value.trim(),
+    guardian_street: $('#g-street').value.trim(),
+    guardian_city: $('#g-city').value.trim(),
+    guardian_postal: $('#g-postal').value.trim(),
+    emergency_name: $('#e-name').value.trim(),
+    emergency_phone: $('#e-phone').value.trim(),
+    emergency_relationship: $('#e-rel').value.trim(),
+    consent_policy: $('[name="consent_policy"]').checked,
+    consent_accurate: $('[name="consent_accurate"]').checked,
+    consent_newsletter: $('[name="consent_newsletter"]').checked,
+    children: $$('[data-child]', form).map((b) => ({
+      child_name: $('[name="child_name"]', b).value.trim(),
+      child_dob: $('[name="child_dob"]', b).value,
+      program: $('[name="child_program"]', b).value,
+      school: $('[name="child_school"]', b).value.trim(),
+      medical: $('[name="child_medical"]', b).value.trim(),
+      photo_consent: $('[name="child_photo_consent"]', b).checked
+    }))
+  });
 
+  const submitBtn = $('button[type="submit"]', form);
+  let sending = false;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (sending) return;
+
+    const { ok, firstBad } = validate();
     if (!ok) {
       note('Please complete the highlighted fields before submitting.', false);
       firstBad?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
@@ -269,12 +300,41 @@
       return;
     }
 
-    // No backend yet — the database and /api/submit land in Phase 1. Say so
-    // plainly rather than showing a success state that didn't happen.
-    const kids = $$('[data-child]', form).length;
-    note(`Validated ✓ — but this form isn't connected to a database yet, so nothing was sent. ` +
-         `Once FSF's Supabase project is set up, this will save the registration and email the team.`, true);
-    toast(`${kids} ${kids === 1 ? 'child' : 'children'} validated — no backend connected yet.`);
+    sending = true;
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-70');
+    const label = submitBtn.innerHTML;
+    submitBtn.textContent = 'Submitting…';
+    note('Submitting your registration…', true);
+
+    try {
+      const r = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(collect())
+      });
+      const data = await r.json().catch(() => ({}));
+
+      if (!r.ok || !data.ok) throw new Error(data.error || 'Something went wrong.');
+
+      const kids = $$('[data-child]', form).length;
+      form.reset();
+      $$('[data-child]', form).slice(1).forEach((b) => b.remove());
+      renumber();
+      $$('.age-note', form).forEach((n) => n.classList.add('hidden'));
+      note(`Thank you — ${kids === 1 ? 'your registration has' : 'your registrations have'} been received. ` +
+           `A team member will be in touch to confirm ${kids === 1 ? 'your child\'s place' : 'their places'}.`, true);
+      toast('Registration received — thank you!');
+      form.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    } catch (err) {
+      note(err.message || "Sorry — we couldn't submit that. Please try again.", false);
+      toast('Could not submit — please try again.');
+    } finally {
+      sending = false;
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-70');
+      submitBtn.innerHTML = label;
+    }
   });
 
   // clear the error ring as the user fixes a field
