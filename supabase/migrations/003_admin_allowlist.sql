@@ -18,6 +18,11 @@ create table if not exists public.admin_allowlist (
 -- user can read the list. Only the service role (server-side) touches it.
 alter table public.admin_allowlist enable row level security;
 
+-- REQUIRED: this project has "Automatically expose new tables" disabled, so a
+-- new table is invisible to the Data API until granted. service_role bypasses
+-- RLS but still needs the GRANT. Never grant anon/authenticated here.
+grant select on public.admin_allowlist to service_role;
+
 -- ---------------------------------------------------------------- seed
 insert into public.admin_allowlist (email, note)
 values ('mailmofixit@gmail.com', 'FunnelVista — initial admin')

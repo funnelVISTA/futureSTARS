@@ -61,6 +61,16 @@ rather than mentioned once and lost.
 
 ---
 
+## ⚠️ Gotchas to remember
+
+- **Every new Supabase table needs `grant … to service_role`.** The project has
+  "Automatically expose new tables" disabled (deliberately — safer default), so a
+  new table is invisible to the Data API until explicitly granted. This bit us
+  once: `admin_allowlist` was created without a grant and every sign-in check
+  returned 500. It failed closed, which is right, but sign-in was impossible.
+- The Supabase SQL Editor only shows the **last** statement's result set. Write
+  multi-check verification queries as a single `union all`.
+
 ## ✅ Done
 
 - Site rebuilt, deployed, push-to-deploy working
