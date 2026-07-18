@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin — Future Stars Foundation</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0b0b0f" />
+<link rel="icon" href="assets/img/cropped-favicon2.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/styles.css?v=2" />
+<script>
+(function () {
+  document.documentElement.classList.remove('no-js');
+  try {
+    var t = localStorage.getItem('fsf-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+</head>
+
+<body class="noise min-h-screen">
+
+<!-- ============================== TOP BAR ============================== -->
+<header class="sticky top-0 z-40 border-b border-cream/10 bg-ink/85 backdrop-blur-xl">
+  <div class="container-x flex items-center justify-between gap-4 py-3">
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="assets/img/headerlogo.png" alt="" class="logo-dark h-9 w-auto" width="226" height="164" />
+      <img src="assets/img/headerlogo-light.png" alt="" class="logo-light h-9 w-auto" width="226" height="164" />
+      <span class="hidden text-sm font-extrabold tracking-wide text-cream/70 sm:inline">ADMIN</span>
+    </a>
+
+    <div class="flex items-center gap-2">
+      <span id="who" class="hidden max-w-[40vw] truncate text-xs text-cream/60 sm:inline"></span>
+
+      <button id="theme-toggle" type="button"
+              class="grid h-10 w-10 place-items-center rounded-xl border border-cream/15 text-cream/75 transition-all hover:border-gold hover:text-gold"
+              aria-label="Switch theme">
+        <svg class="theme-icon-sun h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>
+        </svg>
+        <svg class="theme-icon-moon h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 13.2A8.6 8.6 0 1 1 10.8 3a6.9 6.9 0 0 0 10.2 10.2z"/>
+        </svg>
+      </button>
+
+      <button id="signout" type="button" class="hidden btn btn-ghost !px-4 !py-2 !text-xs">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main class="container-x py-10">
+
+  <!-- ---------------------------- BOOTING ---------------------------- -->
+  <div id="booting" class="py-24 text-center text-sm text-cream/60">Loading…</div>
+
+  <!-- ---------------------------- LOGIN ------------------------------ -->
+  <section id="login" class="hidden py-12">
+    <div class="card mx-auto max-w-md p-7 md:p-9">
+      <p class="eyebrow mb-5">Staff access</p>
+      <h1 class="text-3xl">Sign in</h1>
+      <p class="mt-3 text-sm leading-relaxed text-cream/65">
+        Enter your staff email and we'll send a one-time sign-in link. No password to remember.
+      </p>
+
+      <form id="login-form" class="mt-7" novalidate>
+        <label class="label" for="login-email">Email address</label>
+        <input id="login-email" type="email" class="field" autocomplete="email" required />
+        <button type="submit" class="btn btn-gold mt-5 w-full">
+          Email me a sign-in link
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p id="login-note" class="mt-4 hidden text-sm" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ------------------------- NOT AUTHORISED ------------------------ -->
+  <section id="denied" class="hidden py-12">
+    <div class="card mx-auto max-w-md p-7 text-center md:p-9">
+      <div class="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-2xl bg-coral/12 ring-1 ring-coral/25">
+        <svg class="h-6 w-6 text-coral" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl">Not authorised</h1>
+      <p class="mt-3 text-sm leading-relaxed text-cream/65">
+        You're signed in as <span id="denied-email" class="font-semibold text-cream"></span>, but that
+        account isn't on the admin list. Ask an existing admin to grant access.
+      </p>
+      <button id="denied-signout" class="btn btn-ghost mt-6">Sign out</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------- DASHBOARD -------------------------- -->
+  <section id="dash" class="hidden">
+
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow mb-3">Dashboard</p>
+        <h1 class="text-[clamp(1.8rem,4vw,2.6rem)]">Overview</h1>
+      </div>
+      <button id="refresh" class="btn btn-ghost !py-2.5 !text-xs">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 11-2.6-6.4M21 3v6h-6"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- stat cards -->
+    <div id="stats" class="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5"></div>
+
+    <!-- tabs -->
+    <div class="mt-10 flex flex-wrap gap-2 border-b border-cream/10 pb-3" role="tablist">
+      <button class="tab btn btn-gold !py-2.5 !text-xs" data-tab="registrations" role="tab" aria-selected="true">Registrations</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="roster"        role="tab" aria-selected="false">Program rosters</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="volunteers"    role="tab" aria-selected="false">Volunteers</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="partnerships"  role="tab" aria-selected="false">Partnerships</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="contacts"      role="tab" aria-selected="false">Messages</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="subscribers"   role="tab" aria-selected="false">Subscribers</button>
+    </div>
+
+    <!-- toolbar -->
+    <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+      <div class="relative min-w-0 flex-1 sm:max-w-xs">
+        <input id="search" class="field !pl-9" placeholder="Search…" />
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cream/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="count" class="text-xs text-cream/55"></span>
+        <button id="export" class="btn btn-ghost !py-2.5 !text-xs">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div id="panel" class="mt-5 overflow-x-auto rounded-2xl border border-cream/10 bg-ink-2/40"></div>
+  </section>
+</main>
+
+<!-- toast -->
+<div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[90] w-[min(92vw,26rem)] -translate-x-1/2 translate-y-24 rounded-2xl border border-gold/30 bg-ink-2/95 px-5 py-4 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-400" role="status" aria-live="polite" style="transition-timing-function: var(--ease-out-expo)">
+  <p class="text-sm font-semibold" id="toast-text"></p>
+</div>
+
+<script src="assets/js/vendor/supabase.min.js" defer></script>
+<script src="assets/js/admin.js?v=1" defer></script>
+</body>
+</html>

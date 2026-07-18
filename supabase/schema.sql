@@ -216,6 +216,20 @@ begin
   end loop;
 end $$;
 
+-- Admins may also update workflow fields (message read state, record status,
+-- staff notes). Inserts stay server-side via the service role — there is
+-- deliberately no INSERT policy for authenticated users.
+do $$
+declare t text;
+begin
+  foreach t in array array['registrations','volunteers','partnerships','contacts'] loop
+    execute format('drop policy if exists "admins update %1$s" on public.%1$I;', t);
+    execute format(
+      'create policy "admins update %1$s" on public.%1$I
+         for update using (public.is_admin()) with check (public.is_admin());', t);
+  end loop;
+end $$;
+
 -- A user may read their own profile row (so /admin can check its own status).
 drop policy if exists "read own profile" on public.profiles;
 create policy "read own profile" on public.profiles
@@ -241,6 +255,10 @@ grant usage on schema public to anon, authenticated, service_role;
 grant select on
   public.registrations, public.participants, public.volunteers,
   public.partnerships, public.contacts, public.subscribers, public.profiles
+to authenticated;
+
+grant update on
+  public.registrations, public.volunteers, public.partnerships, public.contacts
 to authenticated;
 
 grant all on
