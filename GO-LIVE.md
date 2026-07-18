@@ -68,6 +68,13 @@ rather than mentioned once and lost.
   new table is invisible to the Data API until explicitly granted. This bit us
   once: `admin_allowlist` was created without a grant and every sign-in check
   returned 500. It failed closed, which is right, but sign-in was impossible.
+- **Supabase Auth → URL Configuration** must list the live site. It ships
+  defaulted to `http://localhost:3000`, and any `emailRedirectTo` not on the
+  Redirect URLs allowlist is ignored in favour of Site URL — so sign-in links
+  land on a dead localhost page. Add the real domain here at cutover too.
+- **Magic links are single-use and email scanners pre-fetch them**, which
+  consumes the token and produces `otp_expired` on a link the user never
+  clicked. If it recurs, switch from click-link to a 6-digit code.
 - The Supabase SQL Editor only shows the **last** statement's result set. Write
   multi-check verification queries as a single `union all`.
 
