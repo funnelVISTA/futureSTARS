@@ -222,6 +222,35 @@ create policy "read own profile" on public.profiles
   for select using (auth.uid() = id);
 
 -- ============================================================================
+-- Explicit Data API grants
+--
+-- The project is created with "Automatically expose new tables" DISABLED, so
+-- nothing is reachable through the Data API unless granted here. That is
+-- deliberate: a table added later is private until someone opts it in.
+--
+-- Grants and RLS are two separate gates and BOTH must pass:
+--   • anon (the browser, signed out) gets NOTHING — it cannot even attempt a
+--     read, let alone a write.
+--   • authenticated gets SELECT only; the RLS policies above then narrow that
+--     to admins. A signed-in non-admin still sees zero rows.
+--   • service_role (server-side, /api/submit only) gets full access and
+--     bypasses RLS — this is the sole write path.
+-- ============================================================================
+grant usage on schema public to anon, authenticated, service_role;
+
+grant select on
+  public.registrations, public.participants, public.volunteers,
+  public.partnerships, public.contacts, public.subscribers, public.profiles
+to authenticated;
+
+grant all on
+  public.registrations, public.participants, public.volunteers,
+  public.partnerships, public.contacts, public.subscribers, public.profiles
+to service_role;
+
+-- anon is granted nothing on purpose. Do not add it.
+
+-- ============================================================================
 -- After running this:
 --   1. Sign in to /admin once with the staff email (magic link) to create the
 --      auth user, then flip the flag:
