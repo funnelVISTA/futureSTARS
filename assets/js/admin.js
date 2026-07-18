@@ -102,8 +102,26 @@
     // consumes them, then we tidy the address bar so they aren't left in
     // history or copied into a shared link.
     const { data: { session } } = await sb.auth.getSession();
-    if (location.hash.includes('access_token')) {
+
+    // Supabase reports failures in the hash too (expired/consumed link). Surface
+    // it on the login screen rather than silently showing an empty form — the
+    // usual cause is an email scanner pre-fetching the single-use link.
+    const hash = new URLSearchParams(location.hash.slice(1));
+    const authErr = hash.get('error_description') || hash.get('error');
+    if (location.hash.includes('access_token') || authErr) {
       history.replaceState(null, '', location.pathname);
+    }
+    if (authErr && !session) {
+      show('login');
+      const note = $('#login-note');
+      const expired = /expired|invalid/i.test(authErr);
+      note.innerHTML = expired
+        ? 'That sign-in link has already been used or expired. ' +
+          'Links are single-use and some email scanners open them automatically — ' +
+          '<strong>request a new one below</strong> and click it promptly.'
+        : esc(decodeURIComponent(authErr.replace(/\+/g, ' ')));
+      note.className = 'mt-4 text-sm text-coral';
+      return;
     }
 
     sb.auth.onAuthStateChange((_e, s) => { if (!s) show('login'); });
