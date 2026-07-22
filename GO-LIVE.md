@@ -70,10 +70,11 @@ unused by the UI.
 
 | # | Item | Value | Effort |
 |---|---|---|---|
-| 28 | **Photo consent report** — one list of who may *not* be photographed. Consent is captured per child but buried; staff need it before posting event photos. Highest-value item here. | High | Low |
-| 29 | **Medical & allergy sheet, per program** — printable, for coaches on the field. Data already collected, just not in usable form. | High | Low |
+| 28 | **Photo consent report** — one list of who may *not* be photographed. Per-child consent is now visible in the full record (#45), but there is still no single "do not photograph" list to check before posting event photos. Still the highest-value item here. | High | Low |
+| 29 | **Medical & allergy sheet, per program** — printable, for coaches on the field. Partly served by #45 (a single registration prints cleanly); what's missing is one sheet per programme covering every child at once. | High | Low |
 | 30 | **Registration workflow** — confirm / waitlist / cancel in one click. Schema supports it; UI only displays it. | High | Low |
 | 31 | **Auto-generated impact numbers** — children served, by program, by age, over time. Fills the biggest gap on the public site (no published stats; none invented). Feeds donor + funder conversations. | High | Medium |
+| 45 | ✅ **Full record view** — a View button on every row opens the complete submission in the dashboard, grouped as the form asked it. Closes the gap where volunteer address/availability/skills/signature and partnership website/focus/description were visible **nowhere** except a CSV export. Includes print styles. **Built.** | — | Done |
 | 44 | ✅ **Analytics tab** — visitors per day/week/month/lifetime, trend chart, top pages, traffic sources, device + country split, and a conversion rate against real form submissions. **Built.** Replaces #11. | — | Done |
 | 32 | **Volunteer screening tracker** — staff-verified flag + CRC **expiry dates**. Currently only shows the applicant's self-reported answer. Highest-stakes record held. | High | Medium |
 | 33 | **Attendance check-in** per session — safeguarding + funder reporting. *Hold until FSF confirms they'd use it.* | High | Medium |
