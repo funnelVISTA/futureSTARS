@@ -702,3 +702,65 @@
     color: var(--color-gold-text);
   }
 }
+
+/* ==========================================================================
+   Print — used by the "Print" button on a full record in /admin.
+
+   Staff print a registration to take to the field (medical notes, emergency
+   contacts). Without this the browser prints the whole dashboard behind the
+   modal: nav, tabs, the table, and a dark background that empties a toner
+   cartridge. Everything except the open record is removed, and the record is
+   flattened to black on white.
+   ========================================================================== */
+@media print {
+  body > *:not(#modal),
+  #modal-backdrop,
+  #modal-close,
+  #modal-print,
+  #modal-done,
+  #modal-mail {
+    display: none !important;
+  }
+
+  #modal {
+    position: static !important;
+  }
+
+  #modal > div {
+    position: static !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  #modal-card {
+    max-width: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  /* Force legible ink regardless of the theme that was on screen. */
+  #modal, #modal * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #bbb !important;
+  }
+
+  /* Medical and screening warnings must survive the trip to greyscale. */
+  #modal .text-coral {
+    color: #000 !important;
+    font-weight: 700 !important;
+  }
+
+  /* A child's record should not be split across a page break mid-card. */
+  #modal section,
+  #modal .rounded-xl {
+    break-inside: avoid;
+  }
+
+  a[href^="mailto:"]::after,
+  a[href^="tel:"]::after {
+    content: "";
+  }
+}

@@ -318,6 +318,255 @@
     render();
   });
 
+  /* -------------------------------------------------- full record (modal)
+     Everything the submitter typed, grouped the way the form asked it. The
+     tables show a summary on purpose — this is the "and the rest" view, so it
+     deliberately renders EMPTY fields too. "Not provided" tells staff the
+     question was asked and skipped; omitting the row would imply it was never
+     asked at all, which matters for medical and screening answers. */
+
+  const YN = (v) => (v ? 'Yes' : 'No');
+
+  /** null for anything genuinely absent, so the renderer can mark it. */
+  const val = (v) => {
+    if (v === null || v === undefined) return null;
+    if (Array.isArray(v)) return v.length ? v.join(', ') : null;
+    const s = String(v).trim();
+    return s === '' ? null : s;
+  };
+
+  const field = (label, value, opts = {}) => {
+    const v = val(value);
+    const missing = v === null;
+    const body = missing
+      ? `<span class="italic text-cream/60">Not provided</span>`
+      : opts.long
+        ? `<span class="whitespace-pre-wrap">${esc(v)}</span>`
+        : opts.mail
+          ? `<a href="mailto:${esc(v)}" class="text-gold-lite hover:underline">${esc(v)}</a>`
+          : opts.tel
+            ? `<a href="tel:${esc(String(v).replace(/[^\d+]/g, ''))}" class="text-gold-lite hover:underline">${esc(v)}</a>`
+            : esc(v);
+    return `
+      <div class="${opts.long ? 'sm:col-span-2' : ''} border-b border-cream/8 py-2.5 last:border-b-0">
+        <dt class="text-[0.68rem] font-bold uppercase tracking-wider text-cream/65">${esc(label)}</dt>
+        <dd class="mt-1 text-sm ${opts.alert && !missing ? 'text-coral' : 'text-cream/85'}">${body}</dd>
+      </div>`;
+  };
+
+  const section = (heading, fieldsHtml, opts = {}) => `
+    <section class="mb-6 last:mb-0">
+      <h3 class="mb-2 text-sm font-extrabold uppercase tracking-wider ${opts.tone || 'text-gold'}">${esc(heading)}</h3>
+      <dl class="grid gap-x-6 sm:grid-cols-2">${fieldsHtml}</dl>
+    </section>`;
+
+  /** Consent answers and provenance — same trailer on every record type. */
+  const trailer = (r, consents) => `
+    ${consents ? section('Consent given at submission', consents, { tone: 'text-teal' }) : ''}
+    ${section('Staff', field('Status', r.status || '—') + field('Staff notes', r.staff_notes, { long: true }), { tone: 'text-cream/60' })}
+    ${section('Submission record', [
+        field('Received', fmtDateTime(r.created_at)),
+        field('Record ID', r.id),
+        field('IP address', r.source_ip),
+        field('Browser', r.user_agent, { long: true })
+      ].join(''), { tone: 'text-cream/60' })}`;
+
+  /** Per-type description of the full record: heading, and the grouped body. */
+  function detailFor(kind, r) {
+    if (kind === 'registrations') {
+      const kids = (r._children || []).map((c) => `
+        <div class="mb-3 rounded-xl border border-cream/10 bg-ink/40 p-4 last:mb-0">
+          <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+            <h4 class="text-base font-extrabold">${esc(c.child_name)}</h4>
+            ${pill(c.program, 'warn')}
+          </div>
+          <dl class="grid gap-x-6 sm:grid-cols-2">
+            ${field('Date of birth', fmtDate(c.child_dob))}
+            ${field('Age', ageFrom(c.child_dob))}
+            ${field('School', c.school)}
+            ${field('Photo consent', YN(c.photo_consent))}
+            ${field('Medical / allergies / accessibility', c.medical, { long: true, alert: true })}
+          </dl>
+        </div>`).join('') || `<p class="text-sm italic text-cream/40">No children on this registration.</p>`;
+
+      return {
+        kind: 'Registration',
+        title: r.guardian_name,
+        sub: `${(r._children || []).length} child${(r._children || []).length === 1 ? '' : 'ren'} · received ${fmtDateTime(r.created_at)}`,
+        mail: r.guardian_email,
+        body:
+          section('Parent / guardian',
+            field('Full name', r.guardian_name) +
+            field('Relationship to child', r.guardian_relationship) +
+            field('Email', r.guardian_email, { mail: true }) +
+            field('Phone', r.guardian_phone, { tel: true })) +
+          section('Home address',
+            field('Street', r.guardian_street) +
+            field('City', r.guardian_city) +
+            field('Postal code', r.guardian_postal)) +
+          section('Emergency contact',
+            field('Name', r.emergency_name) +
+            field('Phone', r.emergency_phone, { tel: true }) +
+            field('Relationship', r.emergency_relationship), { tone: 'text-coral' }) +
+          `<section class="mb-6"><h3 class="mb-2 text-sm font-extrabold uppercase tracking-wider text-gold">Children registered</h3>${kids}</section>` +
+          trailer(r,
+            field('Programme policies agreed', YN(r.consent_policy)) +
+            field('Information declared accurate', YN(r.consent_accurate)) +
+            field('Newsletter opt-in', YN(r.consent_newsletter)))
+      };
+    }
+
+    if (kind === 'volunteers') {
+      return {
+        kind: 'Volunteer application',
+        title: r.name,
+        sub: `Applied ${fmtDateTime(r.created_at)}`,
+        mail: r.email,
+        body:
+          section('Applicant',
+            field('Full name', r.name) +
+            field('Date of birth', r.dob ? `${fmtDate(r.dob)} (age ${ageFrom(r.dob)})` : null) +
+            field('Email', r.email, { mail: true }) +
+            field('Phone', r.phone, { tel: true }) +
+            field('Emergency contact', r.emergency_contact)) +
+          section('Address',
+            field('Street', r.street) +
+            field('City', r.city) +
+            field('Province', r.province) +
+            field('Postal code', r.postal) +
+            field('Country', r.country)) +
+          section('Volunteering',
+            field('Areas of interest', r.interests) +
+            field('Availability', r.availability) +
+            field('Why they want to volunteer', r.why, { long: true }) +
+            field('Skills and experience', r.skills, { long: true }) +
+            field('Medical needs / accommodations', r.medical_needs, { long: true, alert: true })) +
+          // The screening block is why this view exists: these answers decide
+          // whether someone may be placed with children.
+          section('Child-safety screening',
+            field('Criminal record check', r.criminal_record_check) +
+            field('Youth protection policy agreed', YN(r.policy_agreed)) +
+            field('Declaration signed', r.signature) +
+            field('Date signed', r.signed_date ? fmtDate(r.signed_date) : null), { tone: 'text-coral' }) +
+          trailer(r, field('Consent given', YN(r.consent)))
+      };
+    }
+
+    if (kind === 'partnerships') {
+      return {
+        kind: 'Partnership enquiry',
+        title: r.org_name,
+        sub: `From ${r.contact_person} · received ${fmtDateTime(r.created_at)}`,
+        mail: r.email,
+        body:
+          section('Organisation',
+            field('Organisation name', r.org_name) +
+            field('Website', r.website) +
+            field('Address', r.address, { long: true })) +
+          section('Contact',
+            field('Contact person', r.contact_person) +
+            field('Job title', r.title) +
+            field('Email', r.email, { mail: true }) +
+            field('Phone', r.phone, { tel: true })) +
+          section('Proposal',
+            field('Type of partnership', r.partnership_type) +
+            field('Focus area', r.focus_area) +
+            field('Description', r.description, { long: true }) +
+            field('Previous partnership with FSF', r.prior_partnership, { long: true }) +
+            field('How they heard about FSF', r.heard_about)) +
+          trailer(r, field('Consent given', YN(r.consent)))
+      };
+    }
+
+    if (kind === 'contacts') {
+      return {
+        kind: 'Message',
+        title: `${r.first_name} ${r.last_name}`,
+        sub: `Received ${fmtDateTime(r.created_at)}`,
+        mail: r.email,
+        body:
+          section('From',
+            field('First name', r.first_name) +
+            field('Last name', r.last_name) +
+            field('Email', r.email, { mail: true }) +
+            field('Read', YN(r.is_read))) +
+          section('Message', field('Message', r.message, { long: true })) +
+          section('Staff', field('Staff notes', r.staff_notes, { long: true }), { tone: 'text-cream/70' }) +
+          section('Submission record', [
+            field('Received', fmtDateTime(r.created_at)),
+            field('Record ID', r.id),
+            field('IP address', r.source_ip),
+            field('Browser', r.user_agent, { long: true })
+          ].join(''), { tone: 'text-cream/60' })
+      };
+    }
+
+    // subscribers — thin table, but the CASL consent trail is the whole point
+    return {
+      kind: 'Newsletter subscriber',
+      title: r.email,
+      sub: `Subscribed ${fmtDateTime(r.consented_at || r.created_at)}`,
+      mail: r.email,
+      body:
+        section('Subscription',
+          field('Email', r.email, { mail: true }) +
+          field('Status', r.unsubscribed_at ? 'Unsubscribed' : 'Active') +
+          field('Unsubscribed at', r.unsubscribed_at ? fmtDateTime(r.unsubscribed_at) : null)) +
+        section('Consent trail (CASL)',
+          field('Consent given at', fmtDateTime(r.consented_at)) +
+          field('Collected from', r.consent_source) +
+          field('IP address', r.source_ip) +
+          field('Browser', r.user_agent, { long: true }), { tone: 'text-teal' })
+    };
+  }
+
+  /* ------------------------------------------------------- modal plumbing */
+  let lastFocus = null;
+
+  function openRecord(kind, id) {
+    const r = (data[kind] || []).find((x) => String(x.id) === String(id));
+    if (!r) return toast('That record is no longer loaded — try Refresh.');
+
+    const d = detailFor(kind, r);
+    $('#modal-kind').textContent = d.kind;
+    $('#modal-title').textContent = d.title || '(no name given)';
+    $('#modal-sub').textContent = d.sub || '';
+    $('#modal-body').innerHTML = d.body;
+
+    const mail = $('#modal-mail');
+    if (d.mail) { mail.href = `mailto:${d.mail}`; mail.classList.remove('hidden'); }
+    else mail.classList.add('hidden');
+
+    lastFocus = document.activeElement;
+    $('#modal').classList.remove('hidden');
+    document.documentElement.classList.add('overflow-hidden');
+    $('#modal-close').focus();
+  }
+
+  function closeRecord() {
+    $('#modal').classList.add('hidden');
+    document.documentElement.classList.remove('overflow-hidden');
+    lastFocus?.focus?.();
+  }
+
+  $('#modal-close').addEventListener('click', closeRecord);
+  $('#modal-done').addEventListener('click', closeRecord);
+  $('#modal-backdrop').addEventListener('click', closeRecord);
+  $('#modal-print').addEventListener('click', () => window.print());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#modal').classList.contains('hidden')) closeRecord();
+  });
+
+  /** Wires every [data-view] button inside a freshly rendered panel. */
+  const bindViewButtons = (root) => $$('[data-view]', root).forEach((b) =>
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();       // registration rows also toggle on click
+      openRecord(b.dataset.kind, b.dataset.view);
+    }));
+
+  const viewBtn = (kind, id) =>
+    `<button class="btn btn-ghost !px-3 !py-1.5 !text-[0.68rem]" data-view="${esc(id)}" data-kind="${kind}">View</button>`;
+
   /* -------------------------------------------------------------- tables */
   const TH = 'px-4 py-3 text-left text-[0.68rem] font-bold uppercase tracking-wider text-cream/55 whitespace-nowrap';
   const TD = 'px-4 py-3 align-top text-sm';
@@ -369,7 +618,7 @@
 
     if (tab === 'registrations') {
       panel.innerHTML = table(
-        ['Received', 'Guardian', 'Contact', 'Children', 'Status'],
+        ['Received', 'Guardian', 'Contact', 'Children', 'Status', ''],
         rows.map((r) => `
           <tr class="cursor-pointer transition-colors hover:bg-cream/[0.03]" data-expand="${r.id}">
             <td class="${TD} whitespace-nowrap text-cream/70">${fmtDate(r.created_at)}</td>
@@ -383,9 +632,10 @@
             </td>
             <td class="${TD}">${r._children.length}</td>
             <td class="${TD}">${pill(r.status, r.status === 'confirmed' ? 'good' : r.status === 'new' ? 'warn' : 'mute')}</td>
+            <td class="${TD} text-right">${viewBtn('registrations', r.id)}</td>
           </tr>
           <tr class="hidden bg-ink/50" data-detail="${r.id}">
-            <td class="px-4 pb-5 pt-1" colspan="5">
+            <td class="px-4 pb-5 pt-1" colspan="6">
               <div class="grid gap-3 sm:grid-cols-2">
                 ${r._children.map((c) => `
                   <div class="rounded-xl border border-cream/10 bg-ink-2/60 p-4">
@@ -396,10 +646,13 @@
                     <div class="mt-2 text-[0.68rem] text-cream/50">Photo consent: ${c.photo_consent ? 'yes' : 'no'}</div>
                   </div>`).join('')}
               </div>
-              <div class="mt-3 text-xs text-cream/55">
-                Emergency: <strong class="text-cream/80">${esc(r.emergency_name)}</strong> · ${esc(r.emergency_phone)}
-                ${r.emergency_relationship ? ' · ' + esc(r.emergency_relationship) : ''}<br/>
-                Address: ${esc(r.guardian_street)}, ${esc(r.guardian_city)} ${esc(r.guardian_postal)}
+              <div class="mt-3 flex flex-wrap items-end justify-between gap-3 text-xs text-cream/55">
+                <div>
+                  Emergency: <strong class="text-cream/80">${esc(r.emergency_name)}</strong> · ${esc(r.emergency_phone)}
+                  ${r.emergency_relationship ? ' · ' + esc(r.emergency_relationship) : ''}<br/>
+                  Address: ${esc(r.guardian_street)}, ${esc(r.guardian_city)} ${esc(r.guardian_postal)}
+                </div>
+                ${viewBtn('registrations', r.id)}
               </div>
             </td>
           </tr>`).join('')
@@ -407,6 +660,7 @@
       $$('[data-expand]', panel).forEach((tr) => tr.addEventListener('click', () => {
         $(`[data-detail="${tr.dataset.expand}"]`, panel)?.classList.toggle('hidden');
       }));
+      bindViewButtons(panel);
 
     } else if (tab === 'roster') {
       // Grouped by program — the view staff actually need on the day.
@@ -426,14 +680,17 @@
                 ${g ? `<div class="mt-1 text-xs text-cream/55">${esc(g.guardian_name)} · ${esc(g.guardian_phone)}</div>
                        <div class="text-xs text-cream/45">ICE: ${esc(g.emergency_name)} ${esc(g.emergency_phone)}</div>` : ''}
                 ${c.medical ? `<div class="mt-2 rounded-lg bg-coral/10 px-2 py-1 text-xs text-coral">⚠ ${esc(c.medical)}</div>` : ''}
+                ${g ? `<div class="mt-2 text-right">${viewBtn('registrations', g.id)}</div>` : ''}
               </div>`;
             }).join('')}
           </div>
         </div>`).join('');
+      // A roster card is a child; the full record lives on their registration.
+      bindViewButtons(panel);
 
     } else if (tab === 'volunteers') {
       panel.innerHTML = table(
-        ['Applied', 'Name', 'Contact', 'Record check', 'Policy', 'Interests'],
+        ['Applied', 'Name', 'Contact', 'Record check', 'Policy', 'Interests', ''],
         rows.map((v) => `
           <tr class="transition-colors hover:bg-cream/[0.03]">
             <td class="${TD} whitespace-nowrap text-cream/70">${fmtDate(v.created_at)}</td>
@@ -446,12 +703,14 @@
                                      v.criminal_record_check === 'Yes' ? 'good' : 'bad')}</td>
             <td class="${TD}">${pill(v.policy_agreed ? 'agreed' : 'not agreed', v.policy_agreed ? 'good' : 'bad')}</td>
             <td class="${TD} text-xs text-cream/65">${esc((v.interests || []).join(', ')) || '—'}</td>
+            <td class="${TD} text-right">${viewBtn('volunteers', v.id)}</td>
           </tr>`).join('')
       );
+      bindViewButtons(panel);
 
     } else if (tab === 'partnerships') {
       panel.innerHTML = table(
-        ['Received', 'Organization', 'Contact', 'Type', 'Status'],
+        ['Received', 'Organization', 'Contact', 'Type', 'Status', ''],
         rows.map((p) => `
           <tr class="transition-colors hover:bg-cream/[0.03]">
             <td class="${TD} whitespace-nowrap text-cream/70">${fmtDate(p.created_at)}</td>
@@ -462,12 +721,15 @@
             </td>
             <td class="${TD} text-xs text-cream/65">${esc(p.partnership_type) || '—'}</td>
             <td class="${TD}">${pill(p.status, p.status === 'active' ? 'good' : 'warn')}</td>
+            <td class="${TD} text-right">${viewBtn('partnerships', p.id)}</td>
           </tr>`).join('')
       );
+      bindViewButtons(panel);
 
     } else if (tab === 'contacts') {
       panel.innerHTML = table(
         ['Received', 'From', 'Message', ''],
+
         rows.map((c) => `
           <tr class="transition-colors hover:bg-cream/[0.03] ${c.is_read ? '' : 'bg-gold/[0.04]'}">
             <td class="${TD} whitespace-nowrap text-cream/70">${fmtDateTime(c.created_at)}</td>
@@ -477,12 +739,16 @@
             </td>
             <td class="${TD} max-w-md whitespace-pre-wrap text-cream/75">${esc(c.message)}</td>
             <td class="${TD}">
-              <button class="btn btn-ghost !px-3 !py-1.5 !text-[0.68rem]" data-read="${c.id}" data-state="${c.is_read}">
-                ${c.is_read ? 'Mark unread' : 'Mark read'}
-              </button>
+              <div class="flex justify-end gap-2">
+                <button class="btn btn-ghost !px-3 !py-1.5 !text-[0.68rem]" data-read="${c.id}" data-state="${c.is_read}">
+                  ${c.is_read ? 'Mark unread' : 'Mark read'}
+                </button>
+                ${viewBtn('contacts', c.id)}
+              </div>
             </td>
           </tr>`).join('')
       );
+      bindViewButtons(panel);
       $$('[data-read]', panel).forEach((b) => b.addEventListener('click', async () => {
         const next = b.dataset.state !== 'true';
         const { error } = await sb.from('contacts').update({ is_read: next }).eq('id', b.dataset.read);
@@ -494,15 +760,17 @@
 
     } else if (tab === 'subscribers') {
       panel.innerHTML = table(
-        ['Subscribed', 'Email', 'Source', 'Status'],
+        ['Subscribed', 'Email', 'Source', 'Status', ''],
         rows.map((s) => `
           <tr class="transition-colors hover:bg-cream/[0.03]">
             <td class="${TD} whitespace-nowrap text-cream/70">${fmtDate(s.consented_at)}</td>
             <td class="${TD}"><a href="mailto:${esc(s.email)}" class="text-gold-lite hover:underline">${esc(s.email)}</a></td>
             <td class="${TD} text-xs text-cream/65">${esc(s.consent_source)}</td>
             <td class="${TD}">${s.unsubscribed_at ? pill('unsubscribed', 'mute') : pill('active', 'good')}</td>
+            <td class="${TD} text-right">${viewBtn('subscribers', s.id)}</td>
           </tr>`).join('')
       );
+      bindViewButtons(panel);
     }
   }
 

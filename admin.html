@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-<link rel="stylesheet" href="assets/css/styles.css?v=2" />
+<link rel="stylesheet" href="assets/css/styles.css?v=3" />
 <script>
 (function () {
   document.documentElement.classList.remove('no-js');
@@ -145,12 +145,39 @@
   </section>
 </main>
 
+<!-- ===================== FULL RECORD (modal) ===================== -->
+<div id="modal" class="fixed inset-0 z-[80] hidden">
+  <div id="modal-backdrop" class="absolute inset-0 bg-ink/80 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 overflow-y-auto overscroll-contain p-4 sm:p-8">
+    <div id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+         class="card mx-auto w-full max-w-3xl p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p id="modal-kind" class="eyebrow mb-2"></p>
+          <h2 id="modal-title" class="text-[clamp(1.4rem,3vw,2rem)]"></h2>
+          <p id="modal-sub" class="mt-2 text-sm text-cream/60"></p>
+        </div>
+        <button id="modal-close" type="button" aria-label="Close"
+                class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-cream/15 text-cream/70 transition-all hover:border-coral hover:text-coral">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="modal-body" class="mt-7"></div>
+      <div class="mt-8 flex flex-wrap justify-end gap-2 border-t border-cream/10 pt-5">
+        <a id="modal-mail" class="btn btn-ghost !py-2.5 !text-xs" href="#">Reply by email</a>
+        <button id="modal-print" type="button" class="btn btn-ghost !py-2.5 !text-xs">Print</button>
+        <button id="modal-done" type="button" class="btn btn-gold !py-2.5 !text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- toast -->
 <div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[90] w-[min(92vw,26rem)] -translate-x-1/2 translate-y-24 rounded-2xl border border-gold/30 bg-ink-2/95 px-5 py-4 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-400" role="status" aria-live="polite" style="transition-timing-function: var(--ease-out-expo)">
   <p class="text-sm font-semibold" id="toast-text"></p>
 </div>
 
 <script src="assets/js/vendor/supabase.min.js" defer></script>
-<script src="assets/js/admin.js?v=2" defer></script>
+<script src="assets/js/admin.js?v=3" defer></script>
 </body>
 </html>
