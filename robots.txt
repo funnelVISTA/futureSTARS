@@ -1,0 +1,26 @@
+# ============================================================================
+# TEMPORARY — blocks ALL crawlers while this site lives on *.vercel.app.
+#
+# The real site is still the WordPress install at futurestarsfoundation.com.
+# If Google indexes this staging copy, FSF ends up with two versions of the
+# same content competing in search results, on a domain they have no brand
+# equity in — and cleaning that up afterwards takes weeks of recrawls.
+#
+# AT CUTOVER: replace this whole file with the block at the bottom, and remove
+# the noindex meta tags from index.html and register.html. See GO-LIVE.md #12.
+# Getting this wrong in the other direction — shipping the live site still
+# disallowed — silently removes FSF from Google entirely, so verify after.
+# ============================================================================
+
+User-agent: *
+Disallow: /
+
+# ----------------------------------------------------------------------------
+# CUTOVER VERSION — swap this in when the domain points here:
+#
+# User-agent: *
+# Allow: /
+# Disallow: /admin
+#
+# Sitemap: https://futurestarsfoundation.com/sitemap.xml
+# ----------------------------------------------------------------------------

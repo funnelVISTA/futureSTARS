@@ -32,7 +32,9 @@ rather than mentioned once and lost.
 | 9 | **Sender domain DNS** (SPF/DKIM) | Notification email lands in spam without it. |
 | 10 | **Replace the 7 program images** | Current ones are 325×250 stock — soft on modern screens, and several show no youth of African descent, which misrepresents who FSF serves. |
 | 11 | ~~**Analytics** — Plausible (~$9/mo)~~ | ✅ **Built instead.** First-party cookieless tracking writes to Supabase and is read by the Analytics tab in `/admin` — no third party, no monthly fee, no cookie banner, and the data sits next to registrations so the dashboard can show a real conversion rate. Needs migration `007_analytics.sql` run. Revisit Plausible only if FSF wants funnels/goals beyond what the tab shows. |
-| 12 | **Preserve SEO at cutover** | Existing Google Search Console / Analytics history for futurestarsfoundation.com. Set up redirects for the old WordPress URLs. |
+| 12 | **SEO cutover — a checklist, not one switch** | ⚠️ **Staging was fully indexable and is now blocked.** `robots.txt` disallows everything and `index.html`/`register.html` carry `noindex`, so Google cannot index this copy alongside the live WordPress site. **All three must be reversed at cutover or FSF disappears from Google.** Then: add `sitemap.xml`, add `<link rel="canonical">`, update the OG/Twitter URLs (#5), 301-redirect the old WordPress URLs, and re-submit in Search Console. |
+| 12b | **Google Search Console** — verify the domain | Free, external to the code. The only way to see what Google actually indexed, submit the sitemap, and catch the "still disallowed" mistake above. Do this the day of cutover. |
+| 12c | **Google Business Profile** | Highest-leverage single SEO action for a local youth org — puts FSF on Maps and in the local pack for "youth programs Surrey". Cross-references the JSON-LD now in `index.html`. Needs FSF to verify the Surrey address. |
 
 ## 🟡 Waiting on FSF (see `Discovery_Future_Stars_Foundation.pdf`)
 

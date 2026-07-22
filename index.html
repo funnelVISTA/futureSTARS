@@ -7,6 +7,11 @@
 <meta name="description" content="Future Stars Foundation (FSF) is a youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship, leadership development and essential support services." />
 <meta name="theme-color" content="#0b0b0f" />
 
+<!-- TEMPORARY: staging on *.vercel.app must not be indexed alongside the live
+     WordPress site. robots.txt blocks crawling; this blocks indexing for
+     anything that ignores it. REMOVE BOTH AT CUTOVER — see GO-LIVE.md #12. -->
+<meta name="robots" content="noindex, nofollow" />
+
 <!-- Link previews. og:image MUST be an absolute URL — scrapers don't resolve
      relative paths, and most will silently show nothing. Update the origin here
      if the site moves to futurestarsfoundation.com. -->
@@ -25,6 +30,54 @@
 <meta name="twitter:title" content="Future Stars Foundation — Empowering Youth for a Brighter Future" />
 <meta name="twitter:description" content="A youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship and essential support services." />
 <meta name="twitter:image" content="https://futurestarsfoundation.vercel.app/assets/img/og-card.jpg" />
+
+<!-- Structured data. Lets Google show the knowledge panel (logo, address, phone,
+     socials) for "Future Stars Foundation" instead of a plain blue link, and is
+     what Google Business Profile and Maps cross-reference against.
+
+     Every value here is taken verbatim from the page below — nothing inferred.
+     Type is NGO, NOT Charity: FSF's CRA registration is unconfirmed
+     (GO-LIVE.md #13) and claiming charity status in markup would be a false
+     statement to Google. Do not add a charity number until FSF supplies one.
+
+     URLs use the real .com domain deliberately — this describes the
+     organisation, not this staging deployment, and it is correct at cutover. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  "name": "Future Stars Foundation",
+  "alternateName": "FSF",
+  "url": "https://futurestarsfoundation.com/",
+  "logo": "https://futurestarsfoundation.com/assets/img/headerlogo.png",
+  "description": "Future Stars Foundation is a youth-focused, community-driven non-profit empowering the next generation through sports, education, mentorship, leadership development and essential support services.",
+  "email": "info@futurestarsfoundation.com",
+  "telephone": "+1-778-707-1921",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "9835 King George Blvd.",
+    "addressLocality": "Surrey",
+    "addressRegion": "BC",
+    "postalCode": "V3T 5H6",
+    "addressCountry": "CA"
+  },
+  "areaServed": [
+    { "@type": "AdministrativeArea", "name": "British Columbia, Canada" },
+    { "@type": "Country", "name": "Sierra Leone" }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/profile.php?id=61581628381135",
+    "https://www.instagram.com/futurestarsfoundation/"
+  ],
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "contactType": "general enquiries",
+    "email": "info@futurestarsfoundation.com",
+    "telephone": "+1-778-707-1921",
+    "availableLanguage": "English"
+  }]
+}
+</script>
 
 <link rel="icon" href="assets/img/cropped-favicon2.png" />
 <link rel="apple-touch-icon" href="assets/img/cropped-favicon2.png" />
