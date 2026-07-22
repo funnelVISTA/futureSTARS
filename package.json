@@ -4,7 +4,7 @@
   "description": "Future Stars Foundation \u2014 single-page site",
   "private": true,
   "scripts": {
-    "check": "node --check assets/js/main.js && node --check assets/js/register.js && node --check assets/js/admin.js && node --check assets/js/turnstile.js && node --check api/submit.js && node --check api/config.js && node --check api/admin-check.js && node scripts/smoke.mjs && node scripts/check-config.mjs",
+    "check": "node --check assets/js/main.js && node --check assets/js/register.js && node --check assets/js/admin.js && node --check assets/js/turnstile.js && node --check assets/js/analytics.js && node --check api/submit.js && node --check api/config.js && node --check api/admin-check.js && node --check api/track.js && node scripts/smoke.mjs && node scripts/admin-smoke.mjs && node scripts/track-smoke.mjs && node scripts/check-config.mjs",
     "build": "npm run check && tailwindcss -i ./src/input.css -o ./assets/css/styles.css --minify",
     "dev": "tailwindcss -i ./src/input.css -o ./assets/css/styles.css --watch",
     "serve": "python3 -m http.server 4173",

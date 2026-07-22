@@ -117,6 +117,7 @@
     <!-- tabs -->
     <div class="mt-10 flex flex-wrap gap-2 border-b border-cream/10 pb-3" role="tablist">
       <button class="tab btn btn-gold !py-2.5 !text-xs" data-tab="registrations" role="tab" aria-selected="true">Registrations</button>
+      <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="analytics"     role="tab" aria-selected="false">Analytics</button>
       <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="roster"        role="tab" aria-selected="false">Program rosters</button>
       <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="volunteers"    role="tab" aria-selected="false">Volunteers</button>
       <button class="tab btn btn-ghost !py-2.5 !text-xs" data-tab="partnerships"  role="tab" aria-selected="false">Partnerships</button>
@@ -125,7 +126,7 @@
     </div>
 
     <!-- toolbar -->
-    <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+    <div id="toolbar" class="mt-5 flex flex-wrap items-center justify-between gap-3">
       <div class="relative min-w-0 flex-1 sm:max-w-xs">
         <input id="search" class="field !pl-9" placeholder="Search…" />
         <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cream/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -150,6 +151,6 @@
 </div>
 
 <script src="assets/js/vendor/supabase.min.js" defer></script>
-<script src="assets/js/admin.js?v=1" defer></script>
+<script src="assets/js/admin.js?v=2" defer></script>
 </body>
 </html>

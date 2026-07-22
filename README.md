@@ -166,6 +166,7 @@ notification. Nothing writes to the database from the browser.
    | `RESEND_API_KEY` | no | Notification email only if set |
    | `NOTIFY_EMAIL` | no | Where notifications go |
    | `NOTIFY_FROM` | no | Verified sender address |
+   | `ANALYTICS_SALT` | no | Any long random string. Falls back to the service-role key, so analytics works without it |
 
 Until `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` are set, `/api/submit`
 returns a 503 telling visitors to email FSF instead — it degrades honestly

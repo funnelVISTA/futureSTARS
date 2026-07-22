@@ -31,7 +31,7 @@ rather than mentioned once and lost.
 | 8c | **Point Supabase Auth at Resend SMTP** | Supabase's built-in auth email is rate-limited and often lands in spam. If a sign-in link doesn't arrive, staff can't log in. Reuse the Resend account from #6. |
 | 9 | **Sender domain DNS** (SPF/DKIM) | Notification email lands in spam without it. |
 | 10 | **Replace the 7 program images** | Current ones are 325×250 stock — soft on modern screens, and several show no youth of African descent, which misrepresents who FSF serves. |
-| 11 | **Analytics** — Plausible (~$9/mo, cookieless) | Chosen over GA4 to avoid forcing a cookie banner onto a youth-facing site. |
+| 11 | ~~**Analytics** — Plausible (~$9/mo)~~ | ✅ **Built instead.** First-party cookieless tracking writes to Supabase and is read by the Analytics tab in `/admin` — no third party, no monthly fee, no cookie banner, and the data sits next to registrations so the dashboard can show a real conversion rate. Needs migration `007_analytics.sql` run. Revisit Plausible only if FSF wants funnels/goals beyond what the tab shows. |
 | 12 | **Preserve SEO at cutover** | Existing Google Search Console / Analytics history for futurestarsfoundation.com. Set up redirects for the old WordPress URLs. |
 
 ## 🟡 Waiting on FSF (see `Discovery_Future_Stars_Foundation.pdf`)
@@ -74,6 +74,7 @@ unused by the UI.
 | 29 | **Medical & allergy sheet, per program** — printable, for coaches on the field. Data already collected, just not in usable form. | High | Low |
 | 30 | **Registration workflow** — confirm / waitlist / cancel in one click. Schema supports it; UI only displays it. | High | Low |
 | 31 | **Auto-generated impact numbers** — children served, by program, by age, over time. Fills the biggest gap on the public site (no published stats; none invented). Feeds donor + funder conversations. | High | Medium |
+| 44 | ✅ **Analytics tab** — visitors per day/week/month/lifetime, trend chart, top pages, traffic sources, device + country split, and a conversion rate against real form submissions. **Built.** Replaces #11. | — | Done |
 | 32 | **Volunteer screening tracker** — staff-verified flag + CRC **expiry dates**. Currently only shows the applicant's self-reported answer. Highest-stakes record held. | High | Medium |
 | 33 | **Attendance check-in** per session — safeguarding + funder reporting. *Hold until FSF confirms they'd use it.* | High | Medium |
 | 34 | **Staff notes** on any record — fields already exist. | Medium | Low |
@@ -94,8 +95,9 @@ their inbox and this tab drops in value — but keep it: inboxes are personal an
 get deleted or leave with the person, the database is the durable shared record.
 
 **Already scoped but genuinely blocked, not forgotten:** donation metrics
-(Phase 2), traffic/conversion funnel (Plausible not set up), program capacity
-(FSF hasn't answered caps).
+(Phase 2) and program capacity (FSF hasn't answered caps). The traffic and
+conversion funnel is no longer blocked — it was built as #44 rather than
+waiting on a Plausible subscription.
 
 ---
 
