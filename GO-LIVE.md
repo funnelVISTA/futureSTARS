@@ -6,7 +6,7 @@ WordPress site** at futurestarsfoundation.com.
 Kept current as work progresses. Anything discovered mid-build gets added here
 rather than mentioned once and lost.
 
-**Status legend:** 🔴 blocks launch · 🟠 before real traffic · 🟡 waiting on FSF · 🟢 polish
+**Status legend:** 🔴 blocks launch · 🟠 before real traffic · 🆓 free external accounts · 🟡 waiting on FSF · 🟢 polish · 🔵 dashboard menu
 
 ---
 
@@ -33,14 +33,24 @@ rather than mentioned once and lost.
 | 10 | **Replace the 7 program images** | Current ones are 325×250 stock — soft on modern screens, and several show no youth of African descent, which misrepresents who FSF serves. |
 | 11 | ~~**Analytics** — Plausible (~$9/mo)~~ | ✅ **Built instead.** First-party cookieless tracking writes to Supabase and is read by the Analytics tab in `/admin` — no third party, no monthly fee, no cookie banner, and the data sits next to registrations so the dashboard can show a real conversion rate. Needs migration `007_analytics.sql` run. Revisit Plausible only if FSF wants funnels/goals beyond what the tab shows. |
 | 12 | **SEO cutover — a checklist, not one switch** | ⚠️ **Staging was fully indexable and is now blocked.** `robots.txt` disallows everything and `index.html`/`register.html` carry `noindex`, so Google cannot index this copy alongside the live WordPress site. **All three must be reversed at cutover or FSF disappears from Google.** Then: add `sitemap.xml`, add `<link rel="canonical">`, update the OG/Twitter URLs (#5), 301-redirect the old WordPress URLs, and re-submit in Search Console. |
-| 12b | **Google Search Console** — verify the domain | Free, external to the code. The only way to see what Google actually indexed, submit the sitemap, and catch the "still disallowed" mistake above. Do this the day of cutover. |
-| 12c | **Google Business Profile** | Highest-leverage single SEO action for a local youth org — puts FSF on Maps and in the local pack for "youth programs Surrey". Cross-references the JSON-LD now in `index.html`. Needs FSF to verify the Surrey address. |
+
+## 🆓 Free external accounts (no code — someone just has to register them)
+
+Nothing here ships in the repo. These are accounts FSF owns, and they should be
+created in **FSF's own Google account**, not a FunnelVista one — otherwise FSF
+loses access to their own search data the day the engagement ends.
+
+| # | Item | Why it matters | When |
+|---|---|---|---|
+| A1 | **Google Business Profile** | Highest-leverage single SEO action for a local youth org. Puts FSF on Maps and in the local pack for searches like "youth programs Surrey" — how a parent actually finds them. Cross-references the JSON-LD already in `index.html`. Needs FSF to verify the Surrey address by postcard. | **Now** — doesn't depend on the domain cutover |
+| A2 | **Google Search Console** | The only way to see what Google actually indexed, submit the sitemap, and catch the "site still disallowed" failure in #12 — which is silent otherwise. | Cutover day |
+| A3 | **Bing Webmaster Tools** | Ten-minute job, imports directly from Search Console. Small share, but it also feeds ChatGPT search results. | Cutover day, optional |
 
 ## 🟡 Waiting on FSF (see `Discovery_Future_Stars_Foundation.pdf`)
 
 | # | Item | Blocks |
 |---|---|---|
-| 13 | **Is FSF a CRA-registered charity?** (number ending `RR0001`) | Whether the donate page may mention **tax receipts at all**. Site says "non-profit" with no number anywhere — a non-profit legally *cannot* issue receipts. **Do not imply otherwise.** |
+| 13 | **Charity number, if FSF has one** (ends `RR0001`) | Not a blocker and not our call — the site is built to work either way, and `index.html` is marked up as `NGO`, which is accurate whether or not they are registered. Supplying a number would unlock two additions: a tax-receipt line on the donate section, and `Charity` markup. Until then the page simply doesn't mention receipts, since promising one the org can't issue is a promise to the *donor*, not a compliance question. |
 | 14 | **Program fees** — price per program | Phase 2 Stripe |
 | 15 | **Stripe account** in FSF's legal entity + bank | Phase 2. Money must never route through a FunnelVista account. |
 | 16 | **Bursary / subsidy path?** | FSF serves low-income and refugee youth — a hard paywall may exclude the people the programs exist for. |
